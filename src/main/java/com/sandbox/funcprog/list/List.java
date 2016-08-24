@@ -16,10 +16,6 @@ public abstract class List<A> {
 
 	public abstract <B> B foldRight(B constant, BiFunction<A, B, B> biFunc);
 
-	public List<A> substract(List<A> list) {
-		return null;
-	}
-
 	public abstract Boolean isEqualTo(List<A> list);
 
 	public <B> List<B> map(Function<A, B> func) {
