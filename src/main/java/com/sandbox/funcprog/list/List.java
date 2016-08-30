@@ -3,6 +3,8 @@ package com.sandbox.funcprog.list;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import com.sandbox.funcprog.recursion.TailRecursion;
+
 public abstract class List<A> {
 
 	public static <T> List<T> cons(T head, List<T> tail) {
@@ -16,14 +18,17 @@ public abstract class List<A> {
 
 	public abstract <B> B foldRight(B seed, BiFunction<A, B, B> biFunc);
 
-	public abstract <B> B foldLeft(B seed, BiFunction<A, B, B> biFunc);
+	public <B> B foldLeft(B seed, BiFunction<A, B, B> biFunc) {
+		return foldl(seed, biFunc).call();
+	}
+
+	protected abstract <B> TailRecursion<B> foldl(B seed, BiFunction<A, B, B> biFunc);
 
 	public abstract Boolean isEqualTo(List<A> list);
 
 	public <B> List<B> map(Function<A, B> func) {
 		return foldRight(nil(), (a, list) -> cons(func.apply(a), list));
 	}
-	 
 
 	public List<A> cat(List<A> list) {
 		return foldRight(list, (a, as) -> cons(a, as));
@@ -46,17 +51,17 @@ public abstract class List<A> {
 		}
 
 		@Override
-		public <B> B foldLeft(B seed, BiFunction<A, B, B> biFunc) {
-			return tail.foldLeft(biFunc.apply(head, seed), biFunc);
-		}
-
-		@Override
 		public Boolean isEqualTo(List<A> list) {
 			return list != Nil.instance && isEqualToCons((Cons<A>) list);
 		}
 
 		private Boolean isEqualToCons(Cons<A> list) {
 			return head.equals(list.head) && tail.isEqualTo(list.tail);
+		}
+
+		@Override
+		public <B> TailRecursion<B> foldl(B seed, BiFunction<A, B, B> biFunc) {
+			return TailRecursion.suspendCall(() -> tail.foldl(biFunc.apply(head, seed), biFunc));
 		}
 
 	}
@@ -66,13 +71,13 @@ public abstract class List<A> {
 		private static final Nil<Object> instance = new Nil<>();
 
 		@Override
-		public <B> B foldLeft(B seed, BiFunction<A, B, B> biFunc) {
+		public <B> B foldRight(B seed, BiFunction<A, B, B> biFunc) {
 			return seed;
 		}
 
 		@Override
-		public <B> B foldRight(B seed, BiFunction<A, B, B> biFunc) {
-			return seed;
+		protected <B> TailRecursion<B> foldl(B seed, BiFunction<A, B, B> biFunc) {
+			return TailRecursion.finalCall(seed);
 		}
 
 		@Override

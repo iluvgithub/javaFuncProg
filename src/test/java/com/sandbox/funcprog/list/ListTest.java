@@ -23,7 +23,7 @@ public class ListTest {
 	@Test
 	public void testBigSum() throws Exception {
 		// arrange
-		int n = 10000;
+		int n = 100000;
 		List<Integer> input = nil();
 		for (int i = 0; i < n; ++i) {
 			input = cons(i + 1, input);

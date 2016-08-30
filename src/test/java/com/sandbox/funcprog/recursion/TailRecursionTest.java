@@ -18,7 +18,7 @@ public class TailRecursionTest {
 
 	public void testSum(int upTo) throws Exception {
 		// arrange
-		int n = 10000;
+		int n = 100000;
 		// act
 		TailRecursion<Integer> addAll = addAllFromZeroToN(n, 0);
 		// assert
