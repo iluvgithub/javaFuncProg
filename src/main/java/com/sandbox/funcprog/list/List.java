@@ -21,9 +21,9 @@ public abstract class List<A> {
 	public abstract Boolean isEqualTo(List<A> list);
 
 	public <B> List<B> map(Function<A, B> func) {
-		final List<B> seed = nil();
-		return foldRight(seed, (a, list) -> cons(func.apply(a), list));
+		return foldRight(nil(), (a, list) -> cons(func.apply(a), list));
 	}
+	 
 
 	public List<A> cat(List<A> list) {
 		return foldRight(list, (a, as) -> cons(a, as));
