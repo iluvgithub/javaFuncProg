@@ -14,7 +14,9 @@ public abstract class List<A> {
 		return (Nil<T>) Nil.instance;
 	}
 
-	public abstract <B> B foldRight(B constant, BiFunction<A, B, B> biFunc);
+	public abstract <B> B foldRight(B seed, BiFunction<A, B, B> biFunc);
+
+	public abstract <B> B foldLeft(B seed, BiFunction<A, B, B> biFunc);
 
 	public abstract Boolean isEqualTo(List<A> list);
 
@@ -44,6 +46,11 @@ public abstract class List<A> {
 		}
 
 		@Override
+		public <B> B foldLeft(B seed, BiFunction<A, B, B> biFunc) {
+			return tail.foldLeft(biFunc.apply(head, seed), biFunc);
+		}
+
+		@Override
 		public Boolean isEqualTo(List<A> list) {
 			return list != Nil.instance && isEqualToCons((Cons<A>) list);
 		}
@@ -57,6 +64,11 @@ public abstract class List<A> {
 	private final static class Nil<A> extends List<A> {
 
 		private static final Nil<Object> instance = new Nil<>();
+
+		@Override
+		public <B> B foldLeft(B seed, BiFunction<A, B, B> biFunc) {
+			return seed;
+		}
 
 		@Override
 		public <B> B foldRight(B seed, BiFunction<A, B, B> biFunc) {

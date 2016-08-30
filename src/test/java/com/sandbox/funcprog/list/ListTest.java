@@ -23,15 +23,15 @@ public class ListTest {
 	@Test
 	public void testBigSum() throws Exception {
 		// arrange
-		int n = 10; //000;
+		int n = 10000;
 		List<Integer> input = nil();
 		for (int i = 0; i < n; ++i) {
 			input = cons(i + 1, input);
 		}
 		// act
-		Integer actual = input.foldRight(0, (a, b) -> a + b);
+		Integer actual = input.foldLeft(0, (a, b) -> a + b);
 		// assert
-		assertEquals(n*(n+1)/2, actual.intValue());
+		assertEquals(n * (n + 1) / 2, actual.intValue());
 	}
 
 	@Test
