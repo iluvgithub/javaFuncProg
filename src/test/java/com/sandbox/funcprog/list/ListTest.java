@@ -45,7 +45,6 @@ public class ListTest {
 		// assert
 		assertTrue(input1.isEqualTo(input2));
 		assertFalse(input1.isEqualTo(input3));
-
 		assertTrue(nil1.isEqualTo(nil2));
 		assertFalse(nil1.isEqualTo(input1));
 		assertFalse(input1.isEqualTo(nil1));
