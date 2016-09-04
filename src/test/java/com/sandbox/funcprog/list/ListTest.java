@@ -15,7 +15,7 @@ public class ListTest {
 		// arrange
 		List<Integer> input = cons(1, cons(2, cons(3, nil())));
 		// act
-		Integer actual = input.foldRight(0, (a, b) -> a + b);
+		Integer actual = input.foldLeft(0, (a, b) -> a + b);
 		// assert
 		assertEquals(6, actual.intValue());
 	}
@@ -70,6 +70,17 @@ public class ListTest {
 		List<Integer> actual = input1.cat(input2);
 		// assert
 		List<Integer> expected = cons(1, cons(2, cons(3, cons(4, cons(5, nil())))));
+		assertTrue(expected.isEqualTo(actual));
+	}
+
+	@Test
+	public void testReverse() throws Exception {
+		// arrange
+		List<Integer> input = cons(1, cons(2, cons(3, nil())));
+		// act
+		List<Integer> actual = input.reverse();
+		// assert
+		List<Integer> expected = cons(3, cons(2, cons(1, nil())));
 		assertTrue(expected.isEqualTo(actual));
 	}
 }

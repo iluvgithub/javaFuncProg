@@ -15,8 +15,7 @@ public abstract class List<A> {
 	public static <T> List<T> nil() {
 		return (Nil<T>) Nil.instance;
 	}
-
-	public abstract <B> B foldRight(B seed, BiFunction<A, B, B> biFunc);
+ 
 
 	public <B> B foldLeft(B seed, BiFunction<A, B, B> biFunc) {
 		return foldl(seed, biFunc).call();
@@ -27,11 +26,23 @@ public abstract class List<A> {
 	public abstract Boolean isEqualTo(List<A> list);
 
 	public <B> List<B> map(Function<A, B> func) {
-		return foldRight(nil(), (a, list) -> cons(func.apply(a), list));
+		return reverse().foldLeft(nil(), (a, list) -> cons(func.apply(a), list));
 	}
 
 	public List<A> cat(List<A> list) {
-		return foldRight(list, (a, as) -> cons(a, as));
+		return  reverse().foldLeft(list, (a, as) -> cons(a, as));
+	}
+
+	public List<A> reverse() {
+		return reverseImpl(nil());
+	}
+
+	private List<A> reverseImpl(List<A> accumulator) {
+		return this == nil() ? accumulator : toCons().tail.reverseImpl(cons(toCons().head, accumulator));
+	}
+
+	private Cons<A> toCons() {
+		return (Cons<A>) this;
 	}
 
 	private final static class Cons<A> extends List<A> {
@@ -44,11 +55,7 @@ public abstract class List<A> {
 			this.head = head;
 			this.tail = tail;
 		}
-
-		@Override
-		public <B> B foldRight(B seed, BiFunction<A, B, B> biFunc) {
-			return biFunc.apply(head, tail.foldRight(seed, biFunc));
-		}
+ 
 
 		@Override
 		public Boolean isEqualTo(List<A> list) {
@@ -69,11 +76,7 @@ public abstract class List<A> {
 	private final static class Nil<A> extends List<A> {
 
 		private static final Nil<Object> instance = new Nil<>();
-
-		@Override
-		public <B> B foldRight(B seed, BiFunction<A, B, B> biFunc) {
-			return seed;
-		}
+ 
 
 		@Override
 		protected <B> TailRecursion<B> foldl(B seed, BiFunction<A, B, B> biFunc) {
