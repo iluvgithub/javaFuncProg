@@ -15,7 +15,6 @@ public abstract class List<A> {
 	public static <T> List<T> nil() {
 		return (Nil<T>) Nil.instance;
 	}
- 
 
 	public <B> B foldLeft(B seed, BiFunction<A, B, B> biFunc) {
 		return foldl(seed, biFunc).call();
@@ -30,7 +29,7 @@ public abstract class List<A> {
 	}
 
 	public List<A> cat(List<A> list) {
-		return  reverse().foldLeft(list, (a, as) -> cons(a, as));
+		return reverse().foldLeft(list, (a, as) -> cons(a, as));
 	}
 
 	public List<A> reverse() {
@@ -55,7 +54,6 @@ public abstract class List<A> {
 			this.head = head;
 			this.tail = tail;
 		}
- 
 
 		@Override
 		public Boolean isEqualTo(List<A> list) {
@@ -76,7 +74,6 @@ public abstract class List<A> {
 	private final static class Nil<A> extends List<A> {
 
 		private static final Nil<Object> instance = new Nil<>();
- 
 
 		@Override
 		protected <B> TailRecursion<B> foldl(B seed, BiFunction<A, B, B> biFunc) {
