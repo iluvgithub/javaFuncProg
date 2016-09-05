@@ -50,6 +50,11 @@ public abstract class List<A> {
 		}
 
 		@Override
+		public <B> TailRecursion<B> foldl(B seed, BiFunction<A, B, B> biFunc) {
+			return TailRecursion.suspendCall(() -> tail.foldl(biFunc.apply(head, seed), biFunc));
+		}
+
+		@Override
 		protected TailRecursion<List<A>> reverseImpl(List<A> accumulator) {
 			return TailRecursion.suspendCall(() -> tail.reverseImpl(cons(head, accumulator)));
 		}
@@ -61,11 +66,6 @@ public abstract class List<A> {
 
 		private Boolean isEqualToCons(Cons<A> list) {
 			return head.equals(list.head) && tail.isEqualTo(list.tail);
-		}
-
-		@Override
-		public <B> TailRecursion<B> foldl(B seed, BiFunction<A, B, B> biFunc) {
-			return TailRecursion.suspendCall(() -> tail.foldl(biFunc.apply(head, seed), biFunc));
 		}
 
 	}
@@ -80,15 +80,14 @@ public abstract class List<A> {
 		}
 
 		@Override
-		public Boolean isEqualTo(List<A> list) {
-			return this == list;
-		}
-
-		@Override
 		protected TailRecursion<List<A>> reverseImpl(List<A> accumulator) {
 			return TailRecursion.finalCall(accumulator);
 		}
 
+		@Override
+		public Boolean isEqualTo(List<A> list) {
+			return this == list;
+		}
 	}
 
 }
