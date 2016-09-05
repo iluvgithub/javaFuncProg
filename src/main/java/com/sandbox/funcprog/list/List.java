@@ -25,10 +25,8 @@ public abstract class List<A> {
 	public abstract Boolean isEqualTo(List<A> list);
 
 	public List<A> reverse() {
-		return reverseImpl(nil()).call();
+		return foldLeft(nil(), (h, l) -> cons(h, l));
 	}
-
-	protected abstract TailRecursion<List<A>> reverseImpl(List<A> accumulator);
 
 	public <B> List<B> map(Function<A, B> func) {
 		return reverse().foldLeft(nil(), (a, list) -> cons(func.apply(a), list));
@@ -55,11 +53,6 @@ public abstract class List<A> {
 		}
 
 		@Override
-		protected TailRecursion<List<A>> reverseImpl(List<A> accumulator) {
-			return TailRecursion.suspendCall(() -> tail.reverseImpl(cons(head, accumulator)));
-		}
-
-		@Override
 		public Boolean isEqualTo(List<A> list) {
 			return list != Nil.instance && isEqualToCons((Cons<A>) list);
 		}
@@ -77,11 +70,6 @@ public abstract class List<A> {
 		@Override
 		protected <B> TailRecursion<B> foldl(B seed, BiFunction<A, B, B> biFunc) {
 			return TailRecursion.finalCall(seed);
-		}
-
-		@Override
-		protected TailRecursion<List<A>> reverseImpl(List<A> accumulator) {
-			return TailRecursion.finalCall(accumulator);
 		}
 
 		@Override
