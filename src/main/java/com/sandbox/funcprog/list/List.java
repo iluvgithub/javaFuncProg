@@ -51,7 +51,7 @@ public abstract class List<A> {
 
 		@Override
 		protected TailRecursion<List<A>> reverseImpl(List<A> accumulator) {
-			return tail.reverseImpl(cons(head, accumulator));
+			return TailRecursion.suspendCall(() -> tail.reverseImpl(cons(head, accumulator)));
 		}
 
 		@Override
