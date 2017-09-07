@@ -1,6 +1,7 @@
 package com.sandbox.funcprog.bifunctor;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public abstract class Sum<LEFT, RIGHT> implements BiFunctor<LEFT, RIGHT> {
 
@@ -14,6 +15,10 @@ public abstract class Sum<LEFT, RIGHT> implements BiFunctor<LEFT, RIGHT> {
 
 	public abstract <Z> Z apply(Function<LEFT, Z> f, Function<RIGHT, Z> g);
 
+	public static <T> Function<T, Sum<T, T>> asSwitch(Predicate<T> p) {
+		return t -> p.test(t) ? left(t) : right(t);
+	}
+	
 	@Override
 	public <Y1, Y2> Sum<Y1, Y2> map(Function<LEFT, Y1> f, Function<RIGHT, Y2> g) {
 		return apply(l -> left(f.apply(l)), r -> right(g.apply(r)));
