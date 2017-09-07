@@ -1,6 +1,8 @@
 package com.sandbox.funcprog.bifunctor;
 
-public class Prod<LEFT, RIGHT> {
+import java.util.function.Function;
+
+public class Prod<LEFT, RIGHT> implements BiFunctor<LEFT, RIGHT>{
 
 	private final LEFT l;
 	private final RIGHT r;
@@ -11,7 +13,7 @@ public class Prod<LEFT, RIGHT> {
 		this.r = r;
 	}
 
-	public static <L, R> Prod<L, R> pord(L l, R r) {
+	public static <L, R> Prod<L, R> prod(L l, R r) {
 		return new Prod<>(l, r);
 	}
 
@@ -21,5 +23,10 @@ public class Prod<LEFT, RIGHT> {
 
 	public RIGHT right() {
 		return r;
+	}
+
+	@Override
+	public <Y1, Y2> BiFunctor<Y1, Y2> map(Function<LEFT, Y1> f, Function<RIGHT, Y2> g) {
+		return prod(f.apply(l),g.apply(r));
 	}
 }
