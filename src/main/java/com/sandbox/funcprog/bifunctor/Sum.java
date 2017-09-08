@@ -24,6 +24,11 @@ public abstract class Sum<LEFT, RIGHT> implements BiFunctor<LEFT, RIGHT> {
 		return apply(l -> left(f.apply(l)), r -> right(g.apply(r)));
 	}
 
+	// (a+b) -> (b+a)
+	public static <A, B> Sum<B, A> swap(Sum<A, B> input) {
+		return input.apply(a -> right(a), b -> left(b));
+	}
+
 	// (a+b)+c -> a+(b+c)
 	public static <A, B, C> Sum<A, Sum<B, C>> assocr(Sum<Sum<A, B>, C> input) {
 		return input.apply(ab -> ab.apply(a -> left(a), b -> right(new Left<>(b))), c -> right(new Right<>(c)));
