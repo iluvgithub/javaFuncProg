@@ -36,10 +36,20 @@ public class TreeTest {
 
 		}
 		// act
-		Integer actual = tree.reduce(0,(l, r) -> l + r);
+		Integer actual = tree.reduce(0, (l, r) -> l + r);
 		// assert
-		assertThat(actual).isEqualTo(expected);
-
+		assertThat( expected).isEqualTo(actual);
 	}
 
+	@Test
+	public void testHeadAndTail() throws Exception {
+		// arrange
+		Tree<Integer> tree = join(join(tau(1), tau(2)), join(tau(3), tau(4)));
+		// act
+		Integer h = tree.head();
+		Integer l = tree.last();
+		// assert
+		assertThat(1).isEqualTo(h);
+		assertThat(4).isEqualTo(l);
+	}
 }

@@ -76,7 +76,15 @@ public class Tree<T> {
 	}
 
 	private static <X> List<Tree<X>> insFromNonLeafElement(Prod<Tree<X>, Tree<X>> prd, List<Tree<X>> tail) {
-		return cons(prd.left(), cons(prd.right(), cons(null, tail)));
+		return cons(prd.right(), cons(prd.left(), cons(null, tail)));
+	}
+
+	public T head() {
+		return reduce(null, (a, b) -> a);
+	}
+
+	public T last() {
+		return reduce(null, (a, b) -> b);
 	}
 
 }
