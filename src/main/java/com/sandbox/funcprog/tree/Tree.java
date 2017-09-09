@@ -57,20 +57,22 @@ public class Tree<T> {
 		} else {
 			return pr.left().values.apply(/////////////////////////////////
 					sum -> prod(pr.right(), outsFromLeafElement(sum, outs, id, f)),
-					prd -> prod(insFromNonLeafElement(prd, pr.right()), outs));
+					prd -> prod(insFromNonLeafElement(prd, pr.right()), outs)
+			///////////////////////////////////////////////////////////////
+			);
 		}
 	}
 
-	private static <X> List<Tree<X>> insFromNonLeafElement(Prod<Tree<X>, Tree<X>> prd, List<Tree<X>> tail) {
-		return cons(prd.left(), cons(prd.right(), cons(null, tail)));
+	private static <Z> List<Z> outsFromNonLeafElement(List<Z> outs, BinaryOperator<Z> bi) {
+		return cons(outs.headTwice(bi), outs.tailTwice());
 	}
 
 	private static <X, Z> List<Z> outsFromLeafElement(Sum<Void, X> sum, List<Z> outs, Z id, Function<X, Z> f) {
 		return cons(sum.apply(v -> id, t -> f.apply(t)), outs);
 	}
 
-	private static <Z> List<Z> outsFromNonLeafElement(List<Z> outs, BinaryOperator<Z> bi) {
-		return cons(outs.headTwice(bi), outs.tailTwice());
+	private static <X> List<Tree<X>> insFromNonLeafElement(Prod<Tree<X>, Tree<X>> prd, List<Tree<X>> tail) {
+		return cons(prd.left(), cons(prd.right(), cons(null, tail)));
 	}
 
 }
