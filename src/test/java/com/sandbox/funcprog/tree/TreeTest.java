@@ -4,6 +4,7 @@ import static com.sandbox.funcprog.tree.Tree.join;
 import static com.sandbox.funcprog.tree.Tree.nil;
 import static com.sandbox.funcprog.tree.Tree.tau;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -51,5 +52,25 @@ public class TreeTest {
 		// assert
 		assertThat(1).isEqualTo(h);
 		assertThat(4).isEqualTo(l);
+	}
+	
+	
+	@Test
+	public void testTrace() throws Exception {
+		// arrange
+		Tree<Integer> tree = join(join(tau(1), tau(2)), join(tau(3), tau(4)));
+		// act
+		String actual= tree.trace();
+		// assert
+		assertEquals("1.2.3.4", actual);
+	}
+	@Test
+	public void testReverseTrace() throws Exception {
+		// arrange
+		Tree<Integer> tree = join(join(tau(1), tau(2)), join(tau(3), tau(4)));
+		// act
+		String actual= tree.reverseTrace();
+		// assert
+		assertEquals("4.3.2.1", actual);
 	}
 }

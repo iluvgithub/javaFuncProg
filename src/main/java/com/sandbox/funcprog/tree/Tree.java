@@ -1,6 +1,7 @@
 package com.sandbox.funcprog.tree;
 
 import static com.sandbox.funcprog.bifunctor.Prod.prod;
+import static com.sandbox.funcprog.bifunctor.Prod.swap;
 import static com.sandbox.funcprog.bifunctor.Sum.left;
 import static com.sandbox.funcprog.bifunctor.Sum.right;
 import static com.sandbox.funcprog.recursion.Bouncer.resume;
@@ -10,6 +11,7 @@ import static com.sandbox.funcprog.tree.List.empty;
 
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import com.sandbox.funcprog.bifunctor.Prod;
 import com.sandbox.funcprog.bifunctor.Sum;
@@ -36,7 +38,11 @@ public class Tree<T> {
 	}
 
 	public <Z> Z fold(Z id, Function<T, Z> f, BinaryOperator<Z> bi) {
-		return fold(prod(asList(this), empty()), id, f, bi).call().head();
+		return fold(prod(asList(this), empty()), id, f, bi, x -> x).call().head();
+	}
+
+	public <Z> Z reverseFold(Z id, Function<T, Z> f, BinaryOperator<Z> bi) {
+		return fold(prod(asList(this), empty()), id, f, bi, x -> swap(x)).call().head();
 	}
 
 	public T reduce(T id, BinaryOperator<T> bi) {
@@ -48,20 +54,20 @@ public class Tree<T> {
 	}
 
 	private static <X, Z> Bouncer<List<Z>> fold(Prod<List<Tree<X>>, List<Z>> inOuts, Z id, Function<X, Z> f,
-			BinaryOperator<Z> bi) {
+			BinaryOperator<Z> bi, UnaryOperator<Prod<Tree<X>, Tree<X>>> swap) {
 		return inOuts.left().apply(////////////////////////////////////////
 				resume(inOuts.right()), ////////////////////////////////////////
-				pr -> suspend(() -> fold(newArgs(pr, inOuts.right(), id, f, bi), id, f, bi)));
+				pr -> suspend(() -> fold(newArgs(pr, inOuts.right(), id, f, bi, swap), id, f, bi, swap)));
 	}
 
 	private static <X, Z> Prod<List<Tree<X>>, List<Z>> newArgs(Prod<Tree<X>, List<Tree<X>>> pr, List<Z> outs, Z id,
-			Function<X, Z> f, BinaryOperator<Z> bi) {
+			Function<X, Z> f, BinaryOperator<Z> bi, UnaryOperator<Prod<Tree<X>, Tree<X>>> swap) {
 		if (null == pr.left()) {
 			return prod(pr.right(), outsFromNonLeafElement(outs, bi));
 		} else {
 			return pr.left().values.apply(/////////////////////////////////
 					sum -> prod(pr.right(), outsFromLeafElement(sum, outs, id, f)),
-					prd -> prod(insFromNonLeafElement(prd, pr.right()), outs)
+					prd -> prod(insFromNonLeafElement(swap.apply(prd), pr.right()), outs)
 			///////////////////////////////////////////////////////////////
 			);
 		}
@@ -87,4 +93,11 @@ public class Tree<T> {
 		return reduce(null, (a, b) -> b);
 	}
 
+	public String trace() {
+		return fold("", Object::toString, (a, b) -> a + "." + b);
+	}
+
+	public String reverseTrace() {
+		return reverseFold("", Object::toString, (a, b) -> a + "." + b);
+	}
 }
