@@ -39,6 +39,10 @@ public class Tree<T> {
 		return fold(prod(asList(this), empty()), id, f, bi).call().head();
 	}
 
+	public T reduce(T id, BinaryOperator<T> bi) {
+		return fold(id, x -> x, bi);
+	}
+
 	private static <X> List<Tree<X>> asList(Tree<X> tree) {
 		return cons(tree, empty());
 	}

@@ -36,7 +36,7 @@ public class TreeTest {
 
 		}
 		// act
-		Integer actual = tree.fold(0, x -> x, (l, r) -> l + r);
+		Integer actual = tree.reduce(0,(l, r) -> l + r);
 		// assert
 		assertThat(actual).isEqualTo(expected);
 
