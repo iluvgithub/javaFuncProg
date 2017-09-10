@@ -30,6 +30,10 @@ public class List<T> {
 		return new List<>(right(prod(x, xs)));
 	}
 
+	public static <X> List<X> single(X x) {
+		return cons(x, empty());
+	}
+
 	public <Z> Z fold(Z out, BiFunction<T, Z, Z> bi) {
 		return fold(this, out, bi).call();
 	}
@@ -76,7 +80,11 @@ public class List<T> {
 	}
 
 	public String trace() {
-		return fold("", (x, z) -> (z.length() > 0) ? z + "." + x : x.toString());
+		return "[" + fold("", (x, z) -> (z.length() > 0) ? z + "." + x : x.toString()) + "]";
+	}
+
+	public List<T> concat(List<T> list) {
+		return this.fold(list, (t, ts) -> cons(t, ts));
 	}
 
 	public <Z> List<Z> cumulate(Z e, BiFunction<Z, T, Z> bi) {
