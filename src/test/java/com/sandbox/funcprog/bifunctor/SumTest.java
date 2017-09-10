@@ -19,4 +19,5 @@ public class SumTest {
 		assertEquals(2, f.apply(1).apply(x -> x * 2, null));
 		assertEquals(-2, f.apply(-1).apply(null, x -> x * 2));
 	}
+
 }
