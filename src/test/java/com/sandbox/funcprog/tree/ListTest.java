@@ -2,11 +2,8 @@ package com.sandbox.funcprog.tree;
 
 import static com.sandbox.funcprog.tree.List.cons;
 import static com.sandbox.funcprog.tree.List.empty;
-import static com.sandbox.funcprog.tree.List.single;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-
-import java.util.function.BiFunction;
 
 import org.junit.Test;
 
@@ -40,6 +37,16 @@ public class ListTest {
 	}
 
 	@Test
+	public void testReverse() throws Exception {
+		// arrange
+		List<Integer> list = cons(1, cons(2, cons(3, cons(4, empty()))));
+		// act
+		List<Integer> actual = list.reverse();
+		// assert
+		assertThat(4).isEqualTo(actual.head());
+	}
+
+	@Test
 	public void testTrace() throws Exception {
 		// arrange
 		List<Integer> list = cons(1, cons(2, cons(3, cons(4, empty()))));
@@ -51,47 +58,45 @@ public class ListTest {
 		assertEquals("[5]", cons(5, empty()).trace());
 	}
 
-	//@Test
+	@Test
 	public void testConcat() throws Exception {
 		// arrange
 		List<Integer> l = cons(1, cons(2, empty()));
 		List<Integer> r = cons(3, cons(4, empty()));
 		// act
-		List<Integer> actual=l.concat(r);
+		List<Integer> actual = l.concat(r);
 		// assert[ ]
 		assertEquals("[1.2.3.4]", actual.trace());
 
 	}
 
 	@Test
-	public void testCumulate() throws Exception {
+	public void testLeftCumulate() throws Exception {
 		// arrange
-		List<Integer> list = cons(1, cons(2, cons(3, cons(4, empty()))));
+		List<String> list = cons("1", cons("2", cons("3", cons("4", empty()))));
 		// act
-		List<Integer> actual = list.cumulate(0, (l, r) -> l + r);
+		List<String> actual = list.leftCumulate("0", (l, r) -> l + "+" + r);
 		// assert
-		assertEquals("[0.1.3.6.10]", actual.trace());
+		assertEquals("[0.0+1.0+1+2.0+1+2+3.0+1+2+3+4]", actual.trace());
 	}
 
-	//@Test
+	@Test
 	public void testInits() throws Exception {
 		// arrange
 		List<Integer> list = cons(1, cons(2, cons(3, cons(4, empty()))));
 		// act
-		BiFunction<List<Integer>, Integer, List<Integer>> bi = (xs, x) -> cons(x, xs);
-		List<List<Integer>> l = list.map(x -> single(x));
-		List<Integer> e = empty();
-
-		List<List<Integer>> actual = null;//list.map(x -> single(x)).cumulate(empty(), bi);
+		List<List<Integer>> actual = list.inits();
 		// assert
-		assertEquals("[[].[1].[1.2].[1.2.3].[1.2.3.4]]", actual.trace());
+		assertEquals("[[].[1].[1.2].[1.2.3].[1.2.3.4]]", actual.map(xs -> xs.trace()).trace());
 	}
 
 	@Test
-	public void testPreds() throws Exception {
+	public void testTails() throws Exception {
 		// arrange
-		List<Integer> tree = cons(1, cons(2, cons(3, cons(4, empty()))));
+		List<Integer> list = cons(1, cons(2, cons(3, cons(4, empty()))));
 		// act
+		List<List<Integer>> actual = list.tails();
 		// assert
+		assertEquals("[[1.2.3.4].[2.3.4].[3.4].[4].[].]", actual.map(xs -> xs.trace()).trace());
 	}
 }

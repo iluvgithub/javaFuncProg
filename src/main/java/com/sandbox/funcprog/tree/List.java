@@ -44,7 +44,17 @@ public class List<T> {
 				pr -> suspend(() -> fold(pr.right(), bi.apply(pr.left(), out), bi) //////////////
 		) ///////////////////////////////////////////////////////////////////////////////////////
 		);
+	}
 
+	public List<T> reverse() {
+		return reverse(this, empty()).call();
+	}
+
+	private static <T> Bouncer<List<T>> reverse(List<T> in, List<T> out) {
+		return in.values.apply(//////////////////////////////////////////////////////////////////
+				v -> resume(out), ///////////////////////////////////////////////////////////////
+				pr -> suspend(() -> reverse(pr.right(), cons(pr.left(), out))) //////////////
+		); ///////////////////////////////////////////////////////////////////////////////////////
 	}
 
 	public <Z> List<Z> map(Function<T, Z> f) {
@@ -84,15 +94,24 @@ public class List<T> {
 	}
 
 	public List<T> concat(List<T> list) {
-		return this.fold(list, (t, ts) -> cons(t, ts));
+		return this.reverse().fold(list, (t, ts) -> cons(t, ts));
 	}
 
-	public <Z> List<Z> cumulate(Z e, BiFunction<Z, T, Z> bi) {
+	//TODO: make it tail recursive
+	public <Z> List<Z> leftCumulate(Z e, BiFunction<Z, T, Z> bi) {
 		return values.apply(///////////////////////////////
 				v -> cons(e, empty()), ////////////////////
-				pr -> cons(e, pr.right().cumulate(bi.apply(e, pr.left()), bi))//
+				pr -> cons(e, pr.right().leftCumulate(bi.apply(e, pr.left()), bi))//
 		);
+	}
+ 
 
+	public List<List<T>> inits() {
+		return map(x -> single(x)).leftCumulate(empty(), (l1, l2) -> l1.concat(l2));
+	}
+
+	public List<List<Integer>> tails() {
+		return null;
 	}
 
 }
