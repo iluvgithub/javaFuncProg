@@ -58,7 +58,7 @@ public class List<T> {
 	}
 
 	public <Z> List<Z> map(Function<T, Z> f) {
-		return fold(empty(), (x, zs) -> cons(f.apply(x), zs));
+		return fold(empty(), (x, zs) -> cons(f.apply(x), zs)).reverse();
 	}
 
 	public <Z> Z apply(Z z, Function<Prod<T, List<T>>, Z> g) {

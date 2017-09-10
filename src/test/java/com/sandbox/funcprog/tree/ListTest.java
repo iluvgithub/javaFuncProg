@@ -2,8 +2,9 @@ package com.sandbox.funcprog.tree;
 
 import static com.sandbox.funcprog.tree.List.cons;
 import static com.sandbox.funcprog.tree.List.empty;
+import static com.sandbox.funcprog.tree.List.single;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -56,6 +57,18 @@ public class ListTest {
 		assertEquals("[1.2.3.4]", actual);
 		assertEquals("[]", empty().trace());
 		assertEquals("[5]", cons(5, empty()).trace());
+		assertEquals("[5]", empty().concat(single(5)).trace());
+	}
+	
+	
+	@Test
+	public void testMap() throws Exception {
+		// arrange
+		List<String> list = cons("a", cons("b", cons("c", cons("d", empty()))));
+		// act
+		List<String>actual=list.map(String::toUpperCase);
+		// assert 
+		assertEquals("[A.B.C.D]", actual.trace());
 	}
 
 	@Test
@@ -67,7 +80,6 @@ public class ListTest {
 		List<Integer> actual = l.concat(r);
 		// assert[ ]
 		assertEquals("[1.2.3.4]", actual.trace());
-
 	}
 
 	@Test
@@ -80,7 +92,7 @@ public class ListTest {
 		assertEquals("[0.0+1.0+1+2.0+1+2+3.0+1+2+3+4]", actual.trace());
 	}
 
-	//@Test
+	@Test
 	public void testInits() throws Exception {
 		// arrange
 		List<Integer> list = cons(1, cons(2, cons(3, cons(4, empty()))));
