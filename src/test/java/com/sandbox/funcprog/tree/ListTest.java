@@ -80,7 +80,7 @@ public class ListTest {
 		assertEquals("[0.0+1.0+1+2.0+1+2+3.0+1+2+3+4]", actual.trace());
 	}
 
-	@Test
+	//@Test
 	public void testInits() throws Exception {
 		// arrange
 		List<Integer> list = cons(1, cons(2, cons(3, cons(4, empty()))));
@@ -90,7 +90,7 @@ public class ListTest {
 		assertEquals("[[].[1].[1.2].[1.2.3].[1.2.3.4]]", actual.map(xs -> xs.trace()).trace());
 	}
 
-	@Test
+	//@Test
 	public void testTails() throws Exception {
 		// arrange
 		List<Integer> list = cons(1, cons(2, cons(3, cons(4, empty()))));
