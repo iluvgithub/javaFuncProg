@@ -100,4 +100,6 @@ public class Tree<T> {
 	public String reverseTrace() {
 		return reverseFold("", Object::toString, (a, b) -> a + "." + b);
 	}
+
+
 }

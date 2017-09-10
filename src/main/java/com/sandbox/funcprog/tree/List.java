@@ -75,4 +75,16 @@ public class List<T> {
 		return tail().tail();
 	}
 
+	public String trace() {
+		return fold("", (x, z) -> (z.length() > 0) ? z + "." + x : x.toString());
+	}
+
+	public <Z> List<Z> cumulate(Z e, BiFunction<Z, T, Z> bi) {
+		return values.apply(///////////////////////////////
+				v -> cons(e, empty()), ////////////////////
+				pr -> cons(e, pr.right().cumulate(bi.apply(e, pr.left()), bi))//
+		);
+
+	}
+
 }

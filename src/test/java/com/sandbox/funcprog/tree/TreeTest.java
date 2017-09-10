@@ -64,6 +64,7 @@ public class TreeTest {
 		// assert
 		assertEquals("1.2.3.4", actual);
 	}
+	
 	@Test
 	public void testReverseTrace() throws Exception {
 		// arrange
@@ -73,4 +74,5 @@ public class TreeTest {
 		// assert
 		assertEquals("4.3.2.1", actual);
 	}
+	
 }
