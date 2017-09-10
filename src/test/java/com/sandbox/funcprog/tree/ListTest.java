@@ -4,7 +4,9 @@ import static com.sandbox.funcprog.tree.List.cons;
 import static com.sandbox.funcprog.tree.List.empty;
 import static com.sandbox.funcprog.tree.List.single;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
+import java.util.function.Function;
 
 import org.junit.Test;
 
@@ -59,15 +61,14 @@ public class ListTest {
 		assertEquals("[5]", cons(5, empty()).trace());
 		assertEquals("[5]", empty().concat(single(5)).trace());
 	}
-	
-	
+
 	@Test
 	public void testMap() throws Exception {
 		// arrange
 		List<String> list = cons("a", cons("b", cons("c", cons("d", empty()))));
 		// act
-		List<String>actual=list.map(String::toUpperCase);
-		// assert 
+		List<String> actual = list.map(String::toUpperCase);
+		// assert
 		assertEquals("[A.B.C.D]", actual.trace());
 	}
 
@@ -102,7 +103,7 @@ public class ListTest {
 		assertEquals("[[].[1].[1.2].[1.2.3].[1.2.3.4]]", actual.map(xs -> xs.trace()).trace());
 	}
 
-	//@Test
+	// @Test
 	public void testTails() throws Exception {
 		// arrange
 		List<Integer> list = cons(1, cons(2, cons(3, cons(4, empty()))));
@@ -110,5 +111,18 @@ public class ListTest {
 		List<List<Integer>> actual = list.tails();
 		// assert
 		assertEquals("[[1.2.3.4].[2.3.4].[3.4].[4].[].]", actual.map(xs -> xs.trace()).trace());
+	}
+
+	@Test
+	public void testMaximumSegmentLength() throws Exception {
+		testMsl(7, cons(7, empty()));
+		testMsl(7, cons(-1, cons(3, cons(3, cons(-5, cons(1, cons(3, cons(2, cons(-1, empty())))))))));
+		testMsl(6, cons(-1, cons(3, cons(1, cons(-4, cons(-1, cons(4, cons(2, cons(-1, empty())))))))));
+		testMsl(4, cons(-1, cons(3, cons(1, cons(-4, cons(-1, cons(1, cons(2, cons(-1, empty())))))))));
+	}
+
+	public void testMsl(Integer expected, List<Integer> input) throws Exception {
+		Function<List<Integer>, Integer> msl = l -> l.leftCumulate(0, (a, b) -> Math.max(0, a + b)).fold(Integer.MIN_VALUE, (a, b) -> Math.max(a, b));
+		assertThat(msl.apply(input)).isEqualTo(expected);
 	}
 }
