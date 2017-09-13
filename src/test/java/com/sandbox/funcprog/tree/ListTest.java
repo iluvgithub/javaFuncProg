@@ -194,10 +194,28 @@ public class ListTest {
 		// arrange
 		List<Integer> list = cons(-1, cons(3, cons(2, cons(-1, cons(-2, cons(4, cons(2, one(-1))))))));
 		// act
-		Function<List<Integer>, Integer> max = is -> is.reduceR(0, Math::max);
-		BinaryOperator<Integer> bi = (a, b) -> Math.max(0, a + b);
-		Integer actual = max.apply(list.cumull(0, bi));
+		Function<List<List<List<Integer>>>, List<List<Integer>>> reducedConcat = l -> l.reduceR(empty(),
+				(a, b) -> a.concat(b));
+		Function<List<Integer>, List<List<Integer>>> tailss = l -> l.tails();
+		Function<List<List<Integer>>, List<List<List<Integer>>>> reducedTail = ls -> ls.map(tailss);
+		Function<List<Integer>, List<List<Integer>>> segs = l -> reducedConcat.apply(reducedTail.apply(l.inits()));
+		Function<List<Integer>, Integer> reducedPlus = l -> l.reduceR(0, (a, b) -> a + b);
+		Function<List<Integer>, Integer> redMax = is -> is.reduceR(0, Math::max);
+		Integer actual = redMax.apply(segs.apply(list).map(reducedPlus));
 		// assert
 		assertThat(actual).isEqualTo(8);
 	}
+
+	@Test
+	public void testMaxSegmentLength2() throws Exception {
+		// arrange
+		List<Integer> list = cons(-1, cons(3, cons(2, cons(-1, cons(-2, cons(4, cons(2, one(-1))))))));
+		// act
+		Function<List<Integer>, Integer> redMax = is -> is.reduceR(0, Math::max);
+		BinaryOperator<Integer> bi = (a, b) -> Math.max(0, a + b);
+		Integer actual = redMax.apply(list.cumull(0, bi));
+		// assert
+		assertThat(actual).isEqualTo(8);
+	}
+
 }
