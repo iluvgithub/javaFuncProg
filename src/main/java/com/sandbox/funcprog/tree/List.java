@@ -7,6 +7,7 @@ import static com.sandbox.funcprog.recursion.Bouncer.resume;
 import static com.sandbox.funcprog.recursion.Bouncer.suspend;
 
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 
 import com.sandbox.funcprog.bifunctor.Prod;
 import com.sandbox.funcprog.bifunctor.Sum;
@@ -41,17 +42,21 @@ public class List<T> {
 	 * 
 	 */
 	public <Z> Z foldr(Z id, BiFunction<T, Z, Z> bi) {
-		return values.apply(v -> id, pr -> bi.apply(pr.left(), pr.right().foldr(id, bi))
+		return reverse().foldl(id, (z, t) -> bi.apply(t, z));
+		// values.apply(v -> id, pr -> bi.apply(pr.left(), pr.right().foldr(id,
+		// bi)));
+	}
 
-		);
+	public T reduceR(T id, BinaryOperator<T> bi) {
+		return foldr(id, bi);
 	}
 
 	public String trace() {
 		return "[" + foldr("", (a, b) -> a + (b.length() > 0 ? ("." + b) : "")) + "]";
 	}
 
-	public List<String> reverse() {
-		return null;
+	public List<T> reverse() {
+		return foldl(empty(), (ts, t) -> cons(t, ts));
 	}
 
 	public <Z> Z foldl(Z z, BiFunction<Z, T, Z> bi) {
