@@ -9,6 +9,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 
 import org.junit.Test;
 
@@ -166,24 +167,37 @@ public class ListTest {
 		// assert
 		assertEquals("[e.e+1.e+1+2.e+1+2+3]", actuals.trace());
 	}
+
 	@Test
 
-    public void testInits() throws Exception {
-        // arrange
-        List<Integer> list = cons(1, cons(2, one(3)));
-        // act
-        List<List<Integer>> actual = list.inits();
-        // assert
-        assertThat(actual.map(x -> x.trace()).trace()).isEqualTo("[[].[1].[1.2].[1.2.3]]");
-    }
-	@Test
+	public void testInits() throws Exception {
+		// arrange
+		List<Integer> list = cons(1, cons(2, one(3)));
+		// act
+		List<List<Integer>> actual = list.inits();
+		// assert
+		assertThat(actual.map(x -> x.trace()).trace()).isEqualTo("[[].[1].[1.2].[1.2.3]]");
+	}
 
-    public void testTails() throws Exception {
-        // arrange
-        List<Integer> list = cons(1, cons(2, one(3)));
-        // act
-        List<List<Integer>> actual = list.tails();
-        // assert
-        assertThat(actual.map(x -> x.trace()).trace()).isEqualTo("[[1.2.3].[2.3].[3].[]]");
-    }
+	@Test
+	public void testTails() throws Exception {
+		// arrange
+		List<Integer> list = cons(1, cons(2, one(3)));
+		// act
+		List<List<Integer>> actual = list.tails();
+		// assert
+		assertThat(actual.map(x -> x.trace()).trace()).isEqualTo("[[1.2.3].[2.3].[3].[]]");
+	}
+
+	@Test
+	public void testMaxSegmentLength() throws Exception {
+		// arrange
+		List<Integer> list = cons(-1, cons(3, cons(2, cons(-1, cons(-2, cons(4, cons(2, one(-1))))))));
+		// act
+		Function<List<Integer>, Integer> max = is -> is.reduceR(0, Math::max);
+		BinaryOperator<Integer> bi = (a, b) -> Math.max(0, a + b);
+		Integer actual = max.apply(list.cumull(0, bi));
+		// assert
+		assertThat(actual).isEqualTo(8);
+	}
 }
