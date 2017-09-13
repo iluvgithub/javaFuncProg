@@ -5,6 +5,7 @@ import static com.sandbox.funcprog.tree.List.empty;
 import static com.sandbox.funcprog.tree.List.one;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Arrays;
 import java.util.function.BinaryOperator;
 
 import org.junit.Test;
@@ -56,7 +57,7 @@ public class ListTest {
 		assertThat(one("1").trace()).isEqualTo("[1]");
 	}
 
-	//@Test
+	@Test
 	public void testReverse() throws Exception {
 		// arrange
 		List<String> list = cons("1", cons("2", one("3")));
@@ -75,6 +76,36 @@ public class ListTest {
 		String actual = list.foldl("0", bi);
 		// assert
 		assertThat(actual).isEqualTo("(((0+1)+2)+3)");
+		assertThat(actual)
+				.isEqualTo(Arrays.asList("1", "2", "3").stream().reduce("0", (a, b) -> "(" + a + "+" + b + ")"));
 	}
 
+	@Test
+	public void testFoldRightToLeftReduceMass() throws Exception {
+		// arrange
+		int n = 30000;
+		List<Integer> list = makeList(n);
+		// act
+		Integer actual = list.reduceR(0, (a, b) -> a + b);
+		// assert
+		assertThat(actual).isEqualTo(n * (n + 1) / 2);
+	}
+
+	private static List<Integer> makeList(int n) {
+		List<Integer> list = empty();
+		for (int i = 0; i < n; ++i) {
+			list = cons(i + 1, list);
+		}
+		return list;
+	}
+
+	@Test
+	public void testFoldLeftToRightReduceMass() throws Exception {
+		int n = 30000;
+		List<Integer> list = makeList(n);
+		// act
+		Integer actual = list.foldl(0, (a, b) -> a + b);
+		// assert
+		assertThat(actual).isEqualTo(n * (n + 1) / 2);
+	}
 }
