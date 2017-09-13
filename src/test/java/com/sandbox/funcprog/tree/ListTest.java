@@ -1,9 +1,11 @@
 package com.sandbox.funcprog.tree;
 
+import static com.sandbox.funcprog.tree.List.concat;
 import static com.sandbox.funcprog.tree.List.cons;
 import static com.sandbox.funcprog.tree.List.empty;
 import static com.sandbox.funcprog.tree.List.one;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.function.BinaryOperator;
@@ -58,6 +60,20 @@ public class ListTest {
 	}
 
 	@Test
+
+	public void testMap() throws Exception {
+		// arrange
+		List<String> list = cons("a", cons("b", one("c")));
+		// act
+		List<String> actuals = list.map(String::toUpperCase);
+		// assert
+		assertThat(actuals.head()).isEqualTo("A");
+		assertThat(actuals.tail().head()).isEqualTo("B");
+		assertThat(actuals.tail().tail().head()).isEqualTo("C");
+		assertThat(actuals.tail().tail().tail().head()).isNull();
+	}
+
+	@Test
 	public void testReverse() throws Exception {
 		// arrange
 		List<String> list = cons("1", cons("2", one("3")));
@@ -108,4 +124,16 @@ public class ListTest {
 		// assert
 		assertThat(actual).isEqualTo(n * (n + 1) / 2);
 	}
+
+	@Test
+	public void testConcat() throws Exception {
+		// arrange
+		List<Integer> l = cons(1, cons(2, one(3)));
+		List<Integer> r = cons(4, cons(5, one(6)));
+		// act
+		List<Integer> actual = concat(l, r);
+		// assert
+		assertEquals("[1.2.3.4.5.6]", actual.trace());
+	}
+
 }

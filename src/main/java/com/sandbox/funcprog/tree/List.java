@@ -8,6 +8,7 @@ import static com.sandbox.funcprog.recursion.Bouncer.suspend;
 
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 
 import com.sandbox.funcprog.bifunctor.Prod;
 import com.sandbox.funcprog.bifunctor.Sum;
@@ -31,6 +32,22 @@ public class List<T> {
 
 	public static <X> List<X> one(X x) {
 		return cons(x, empty());
+	}
+
+	public T head() {
+		return applyOnNonEmpty((t, ts) -> t);
+	}
+
+	public List<T> tail() {
+		return applyOnNonEmpty((t, ts) -> ts);
+	}
+
+	private <Z> Z apply(Z z, BiFunction<T, List<T>, Z> bif) {
+		return values.apply(v -> z, pr -> bif.apply(pr.left(), pr.right()));
+	}
+
+	private <Z> Z applyOnNonEmpty(BiFunction<T, List<T>, Z> bif) {
+		return apply(null, bif);
 	}
 
 	/**
@@ -63,7 +80,21 @@ public class List<T> {
 		return bounce(this, z, bi).call();
 	}
 
-	protected static <X, Z> Bouncer<Z> bounce(List<X> xs, Z z, BiFunction<Z, X, Z> bi) {
-		return xs.values.apply(v -> resume(z), pr -> suspend(() -> bounce(pr.right(), bi.apply(z, pr.left()), bi)));
+	protected static <X, Z> Bouncer<Z> bounce(List<X> list, Z z, BiFunction<Z, X, Z> bi) {
+		return list.apply(resume(z), (x, xs) -> suspend(() -> bounce(xs, bi.apply(z, x), bi)));
 	}
+
+	public <Z> List<Z> map(Function<T, Z> f) {
+		return foldr(empty(), (t, zs) -> cons(f.apply(t), zs));
+	}
+
+	public List<T> concat(List<T> right) {
+		return reverse().foldl(right, (ts, t) -> cons(t, ts));
+		// foldr(right, List::cons);
+	}
+
+	public static <X> List<X> concat(List<X> left, List<X> right) {
+		return left.concat(right);
+	}
+
 }
