@@ -42,6 +42,10 @@ public class List<T> {
 		return applyOnNonEmpty((t, ts) -> ts);
 	}
 
+	public T last() {
+		return reverse().head();
+	}
+
 	private <Z> Z apply(Z z, BiFunction<T, List<T>, Z> bif) {
 		return values.apply(v -> z, pr -> bif.apply(pr.left(), pr.right()));
 	}
@@ -95,6 +99,22 @@ public class List<T> {
 
 	public static <X> List<X> concat(List<X> left, List<X> right) {
 		return left.concat(right);
+	}
+
+	public <Z> List<Z> cumulr(Z e, BiFunction<T, Z, Z> bi) {
+		return foldr(one(e), cumulrBiFunction(bi));
+	}
+
+	private <Z> BiFunction<T, List<Z>, List<Z>> cumulrBiFunction(BiFunction<T, Z, Z> bi) {
+		return (t, zs) -> cons(bi.apply(t, zs.head()), zs);
+	}
+
+	public <Z> List<Z> cumull(Z e, BiFunction<Z, T, Z> bi) {
+		return foldl(one(e), cumullBiFunction(bi));
+	}
+
+	private <Z> BiFunction<List<Z>, T, List<Z>> cumullBiFunction(BiFunction<Z, T, Z> bi) {
+		return (zs, t) -> zs.concat(one(bi.apply(zs.last(), t)));
 	}
 
 }

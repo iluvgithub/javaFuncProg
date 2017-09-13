@@ -60,7 +60,18 @@ public class ListTest {
 	}
 
 	@Test
+	public void testHeadAndTailAndLast() throws Exception {
+		// arrange
+		List<String> list = cons("A", cons("B", one("C")));
+		// assert
+		assertThat(list.head()).isEqualTo("A");
+		assertThat(list.tail().head()).isEqualTo("B");
+		assertThat(list.tail().tail().head()).isEqualTo("C");
+		assertThat(list.tail().tail().tail().head()).isNull();
+		assertThat(list.last()).isEqualTo("C");
+	}
 
+	@Test
 	public void testMap() throws Exception {
 		// arrange
 		List<String> list = cons("a", cons("b", one("c")));
@@ -134,6 +145,26 @@ public class ListTest {
 		List<Integer> actual = concat(l, r);
 		// assert
 		assertEquals("[1.2.3.4.5.6]", actual.trace());
+	}
+
+	@Test
+	public void testCumulr() throws Exception {
+		// arrange
+		List<Integer> list = cons(1, cons(2, one(3)));
+		// act
+		List<String> actuals = list.cumulr("e", (i, s) -> i + "+" + s);
+		// assert
+		assertEquals("[1+2+3+e.2+3+e.3+e.e]", actuals.trace());
+	}
+
+	@Test
+	public void testCumull() throws Exception {
+		// arrange
+		List<Integer> list = cons(1, cons(2, one(3)));
+		// act
+		List<String> actuals = list.cumull("e", (s, i) -> s + "+" + i);
+		// assert
+		assertEquals("[e.e+1.e+1+2.e+1+2+3]", actuals.trace());
 	}
 
 }
