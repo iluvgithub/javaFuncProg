@@ -117,4 +117,12 @@ public class List<T> {
 		return (zs, t) -> zs.concat(one(bi.apply(zs.last(), t)));
 	}
 
+	public List<List<T>> inits() {
+		return cumull(empty(), (ts, t) -> ts.concat(one(t)));
+	}
+
+	public List<List<T>> tails() {
+		return cumulr(empty(), (t, ts) -> cons(t, ts));
+	}
+
 }

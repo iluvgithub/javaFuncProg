@@ -166,5 +166,24 @@ public class ListTest {
 		// assert
 		assertEquals("[e.e+1.e+1+2.e+1+2+3]", actuals.trace());
 	}
+	@Test
 
+    public void testInits() throws Exception {
+        // arrange
+        List<Integer> list = cons(1, cons(2, one(3)));
+        // act
+        List<List<Integer>> actual = list.inits();
+        // assert
+        assertThat(actual.map(x -> x.trace()).trace()).isEqualTo("[[].[1].[1.2].[1.2.3]]");
+    }
+	@Test
+
+    public void testTails() throws Exception {
+        // arrange
+        List<Integer> list = cons(1, cons(2, one(3)));
+        // act
+        List<List<Integer>> actual = list.tails();
+        // assert
+        assertThat(actual.map(x -> x.trace()).trace()).isEqualTo("[[1.2.3].[2.3].[3].[]]");
+    }
 }
