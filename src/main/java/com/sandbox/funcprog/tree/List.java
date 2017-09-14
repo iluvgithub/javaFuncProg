@@ -64,8 +64,6 @@ public class List<T> {
 	 */
 	public <Z> Z foldr(Z id, BiFunction<T, Z, Z> bi) {
 		return reverse().foldl(id, (z, t) -> bi.apply(t, z));
-		// values.apply(v -> id, pr -> bi.apply(pr.left(), pr.right().foldr(id,
-		// bi)));
 	}
 
 	public T reduceR(T id, BinaryOperator<T> bi) {
@@ -94,7 +92,6 @@ public class List<T> {
 
 	public List<T> concat(List<T> right) {
 		return reverse().foldl(right, (ts, t) -> cons(t, ts));
-		// foldr(right, List::cons);
 	}
 
 	public static <X> List<X> concat(List<X> left, List<X> right) {
