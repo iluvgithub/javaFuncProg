@@ -1,7 +1,6 @@
 package com.sandbox.funcprog.list;
 
 import static com.sandbox.funcprog.recursion.Bouncer.resume;
-import static com.sandbox.funcprog.recursion.Bouncer.resume;
 import static com.sandbox.funcprog.recursion.Bouncer.suspend;
 
 import java.util.function.BiFunction;
