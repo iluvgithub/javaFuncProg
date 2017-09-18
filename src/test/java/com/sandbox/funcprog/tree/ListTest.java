@@ -58,19 +58,7 @@ public class ListTest {
 		assertThat(actual).isEqualTo("[1.2.3]");
 		assertThat(empty().trace()).isEqualTo("[]");
 		assertThat(one("1").trace()).isEqualTo("[1]");
-	}
-
-	@Test
-	public void testHeadAndTailAndLast() throws Exception {
-		// arrange
-		List<String> list = cons("A", cons("B", one("C")));
-		// assert
-		assertThat(list.head()).isEqualTo("A");
-		assertThat(list.tail().head()).isEqualTo("B");
-		assertThat(list.tail().tail().head()).isEqualTo("C");
-		assertThat(list.tail().tail().tail().head()).isNull();
-		assertThat(list.last()).isEqualTo("C");
-	}
+	} 
 
 	@Test
 	public void testMap() throws Exception {
@@ -79,10 +67,7 @@ public class ListTest {
 		// act
 		List<String> actuals = list.map(String::toUpperCase);
 		// assert
-		assertThat(actuals.head()).isEqualTo("A");
-		assertThat(actuals.tail().head()).isEqualTo("B");
-		assertThat(actuals.tail().tail().head()).isEqualTo("C");
-		assertThat(actuals.tail().tail().tail().head()).isNull();
+		assertThat(actuals.trace()).isEqualTo("A.B.C");
 	}
 
 	@Test

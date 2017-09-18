@@ -34,15 +34,11 @@ public class List<T> {
 		return cons(x, empty());
 	}
 
-	public T head() {
+	private T head() {
 		return applyOnNonEmpty((t, ts) -> t);
 	}
 
-	public List<T> tail() {
-		return applyOnNonEmpty((t, ts) -> ts);
-	}
-
-	public T last() {
+	private T last() {
 		return reverse().head();
 	}
 
