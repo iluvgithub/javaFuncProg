@@ -41,10 +41,6 @@ public abstract class AbstractList<T> implements List<T> {
 		return list.apply(resume(z), (x, xs) -> suspend(() -> bounce(xs, bi.apply(z, x), bi)));
 	}
 
-	private <Z> Z applyOnNonEmpty(BiFunction<T, List<T>, Z> bif) {
-		return apply(null, bif);
-	}
-
 	@Override
 	public T head() {
 		return applyOnNonEmpty((t, ts) -> t);
@@ -53,6 +49,10 @@ public abstract class AbstractList<T> implements List<T> {
 	@Override
 	public List<T> tail() {
 		return applyOnNonEmpty((t, ts) -> ts);
+	}
+
+	private <Z> Z applyOnNonEmpty(BiFunction<T, List<T>, Z> bif) {
+		return apply(null, bif);
 	}
 
 	@Override
