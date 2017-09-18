@@ -1,9 +1,9 @@
-package com.sandbox.funcprog.tree;
+package com.sandbox.funcprog.list;
 
-import static com.sandbox.funcprog.tree.List.concat;
-import static com.sandbox.funcprog.tree.List.cons;
-import static com.sandbox.funcprog.tree.List.empty;
-import static com.sandbox.funcprog.tree.List.one;
+import static com.sandbox.funcprog.list.ConsList.concat;
+import static com.sandbox.funcprog.list.ConsList.cons;
+import static com.sandbox.funcprog.list.ConsList.empty;
+import static com.sandbox.funcprog.list.ConsList.one;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 

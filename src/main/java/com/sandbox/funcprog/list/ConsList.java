@@ -1,87 +1,40 @@
-package com.sandbox.funcprog.tree;
+package com.sandbox.funcprog.list;
 
 import static com.sandbox.funcprog.bifunctor.Prod.prod;
 import static com.sandbox.funcprog.bifunctor.Sum.left;
 import static com.sandbox.funcprog.bifunctor.Sum.right;
-import static com.sandbox.funcprog.recursion.Bouncer.resume;
-import static com.sandbox.funcprog.recursion.Bouncer.suspend;
 
 import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
 import com.sandbox.funcprog.bifunctor.Prod;
 import com.sandbox.funcprog.bifunctor.Sum;
-import com.sandbox.funcprog.recursion.Bouncer;
 
-public class List<T> {
+public class ConsList<T> extends AbstractList<T> {
 
 	private final Sum<Void, Prod<T, List<T>>> values;
 
-	public List(Sum<Void, Prod<T, List<T>>> values) {
+	private ConsList(Sum<Void, Prod<T, List<T>>> values) {
 		this.values = values;
 	}
 
 	public static <X> List<X> empty() {
-		return new List<>(left(null));
+		return new ConsList<>(left(null));
 	}
 
 	public static <X> List<X> cons(X x, List<X> xs) {
-		return new List<>(right(prod(x, xs)));
+		return new ConsList<>(right(prod(x, xs)));
 	}
 
 	public static <X> List<X> one(X x) {
 		return cons(x, empty());
 	}
 
-	private T head() {
-		return applyOnNonEmpty((t, ts) -> t);
-	}
-
-	private T last() {
-		return reverse().head();
-	}
-
-	private <Z> Z apply(Z z, BiFunction<T, List<T>, Z> bif) {
-		return values.apply(v -> z, pr -> bif.apply(pr.left(), pr.right()));
-	}
-
-	private <Z> Z applyOnNonEmpty(BiFunction<T, List<T>, Z> bif) {
-		return apply(null, bif);
-	}
-
-	/**
-	 * right to left reduction
-	 * 
-	 * @param z
-	 * @param bi
-	 * @return
-	 * 
-	 */
-	public <Z> Z foldr(Z id, BiFunction<T, Z, Z> bi) {
-		return reverse().foldl(id, (z, t) -> bi.apply(t, z));
-	}
-
-	public T reduceR(T id, BinaryOperator<T> bi) {
-		return foldr(id, bi);
-	}
-
-	public String trace() {
-		return "[" + foldr("", (a, b) -> a + (b.length() > 0 ? ("." + b) : "")) + "]";
-	}
-
 	public List<T> reverse() {
 		return foldl(empty(), (ts, t) -> cons(t, ts));
 	}
 
-	public <Z> Z foldl(Z z, BiFunction<Z, T, Z> bi) {
-		return bounce(this, z, bi).call();
-	}
-
-	protected static <X, Z> Bouncer<Z> bounce(List<X> list, Z z, BiFunction<Z, X, Z> bi) {
-		return list.apply(resume(z), (x, xs) -> suspend(() -> bounce(xs, bi.apply(z, x), bi)));
-	}
-
+	@Override
 	public <Z> List<Z> map(Function<T, Z> f) {
 		return foldr(empty(), (t, zs) -> cons(f.apply(t), zs));
 	}
@@ -94,6 +47,7 @@ public class List<T> {
 		return left.concat(right);
 	}
 
+	@Override
 	public <Z> List<Z> cumulr(Z e, BiFunction<T, Z, Z> bi) {
 		return foldr(one(e), cumulrBiFunction(bi));
 	}
@@ -102,6 +56,7 @@ public class List<T> {
 		return (t, zs) -> cons(bi.apply(t, zs.head()), zs);
 	}
 
+	@Override
 	public <Z> List<Z> cumull(Z e, BiFunction<Z, T, Z> bi) {
 		return foldl(one(e), cumullBiFunction(bi));
 	}
@@ -116,6 +71,11 @@ public class List<T> {
 
 	public List<List<T>> tails() {
 		return cumulr(empty(), (t, ts) -> cons(t, ts));
+	}
+
+	@Override
+	public <Z> Z apply(Z z, BiFunction<T, List<T>, Z> bif) {
+		return values.apply(v -> z, pr -> bif.apply(pr.left(), pr.right()));
 	}
 
 }
