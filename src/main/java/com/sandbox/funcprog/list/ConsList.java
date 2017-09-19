@@ -1,20 +1,20 @@
 package com.sandbox.funcprog.list;
 
-import static com.sandbox.funcprog.bifunctor.Prod.prod;
-import static com.sandbox.funcprog.bifunctor.Sum.left;
-import static com.sandbox.funcprog.bifunctor.Sum.right;
+import static com.sandbox.funcprog.bifunctor.Both.both;
+import static com.sandbox.funcprog.bifunctor.Either.left;
+import static com.sandbox.funcprog.bifunctor.Either.right;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import com.sandbox.funcprog.bifunctor.Prod;
-import com.sandbox.funcprog.bifunctor.Sum;
+import com.sandbox.funcprog.bifunctor.Both;
+import com.sandbox.funcprog.bifunctor.Either;
 
 public class ConsList<T> extends AbstractList<T> {
 
-	private final Sum<Void, Prod<T, List<T>>> values;
+	private final Either<Void, Both<T, List<T>>> values;
 
-	private ConsList(Sum<Void, Prod<T, List<T>>> values) {
+	private ConsList(Either<Void, Both<T, List<T>>> values) {
 		this.values = values;
 	}
 
@@ -23,7 +23,7 @@ public class ConsList<T> extends AbstractList<T> {
 	}
 
 	public static <X> List<X> cons(X x, List<X> xs) {
-		return new ConsList<>(right(prod(x, xs)));
+		return new ConsList<>(right(both(x, xs)));
 	}
 
 	public static <X> List<X> one(X x) {
