@@ -40,7 +40,7 @@ public class ConsList<T> extends AbstractList<T> {
 	}
 
 	public List<T> concat(List<T> right) {
-		return reverse().foldl(right, (ts, t) -> cons(t, ts));
+		return foldr(right, (t,ts ) -> cons(t, ts));
 	}
 
 	public static <X> List<X> concat(List<X> left, List<X> right) {
