@@ -67,7 +67,7 @@ public class ListTest {
 		// act
 		List<String> actuals = list.map(String::toUpperCase);
 		// assert
-		assertThat(actuals.trace()).isEqualTo("A.B.C");
+		assertThat(actuals.trace()).isEqualTo("[A.B.C]");
 	}
 
 	@Test

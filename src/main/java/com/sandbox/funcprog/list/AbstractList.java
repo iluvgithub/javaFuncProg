@@ -12,7 +12,11 @@ public abstract class AbstractList<T> implements List<T> {
 
 	@Override
 	public String trace() {
-		return "[" + foldr("", (a, b) -> a + (b.length() > 0 ? ("." + b) : "")) + "]";
+		return "[" + asStringBuffer() + "]";
+	}
+
+	private StringBuffer asStringBuffer() {
+		return foldl(new StringBuffer(), (a, b) -> a.append(a.length() > 0 ? "." : "").append(b));
 	}
 
 	/**
