@@ -1,5 +1,6 @@
 package com.sandbox.funcprog.bifunctor;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -33,7 +34,7 @@ public class Both<LEFT, RIGHT> implements BiFunctor<LEFT, RIGHT> {
 	}
 
 	@Override
-	public <Y1, Y2> BiFunctor<Y1, Y2> map(Function<LEFT, Y1> f, Function<RIGHT, Y2> g) {
+	public <Y1, Y2> Both<Y1, Y2> map(Function<LEFT, Y1> f, Function<RIGHT, Y2> g) {
 		return both(f.apply(l), g.apply(r));
 	}
 
@@ -44,5 +45,9 @@ public class Both<LEFT, RIGHT> implements BiFunctor<LEFT, RIGHT> {
 
 	public static <A, B, C> Both<A, Both<B, C>> assocr(Both<Both<A, B>, C> input) {
 		return both(input.left().left(), both(input.left().right(), input.right()));
+	}
+
+	public <Z> Z apply(BiFunction<LEFT, RIGHT, Z> bi) {
+		return bi.apply(left(), right());
 	}
 }
