@@ -40,10 +40,6 @@ public class ListNil<T> implements Functor<T> {
 		return bounce(z, bi).call();
 	}
 
-	private <Z> Z foldl(Function<Functor<Z>, Z> f) {
-		return null;
-	}
-
 	private <Z> Bouncer<Z> bounce(Z z, BiFunction<Z, T, Z> bi) {
 		return values.apply(v -> resume(z), both -> suspend(() -> both.apply(nextStep(z, bi))));
 	}
@@ -70,8 +66,7 @@ public class ListNil<T> implements Functor<T> {
 
 	@Override
 	public <Y> ListNil<Y> map(Function<T, Y> f) {
-		return foldr(nil(), (t, ys) -> cons(f.apply(t), ys)); // fold( in .
-																// F(f,id) )
+		return foldr(nil(), (t, ys) -> cons(f.apply(t), ys));
 	}
 
 }
