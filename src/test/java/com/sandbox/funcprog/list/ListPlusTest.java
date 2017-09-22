@@ -1,7 +1,7 @@
-package com.sandbox.funcprog.functor.list;
+package com.sandbox.funcprog.list;
 
-import static com.sandbox.funcprog.functor.list.ListPlus.cons;
-import static com.sandbox.funcprog.functor.list.ListPlus.wrap;
+import static com.sandbox.funcprog.list.ListPlus.cons;
+import static com.sandbox.funcprog.list.ListPlus.wrap;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.function.BiFunction;
@@ -9,6 +9,8 @@ import java.util.function.BinaryOperator;
 import java.util.stream.IntStream;
 
 import org.junit.Test;
+
+import com.sandbox.funcprog.list.ListPlus;
 
 public class ListPlusTest {
 

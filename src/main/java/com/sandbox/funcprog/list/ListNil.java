@@ -1,4 +1,4 @@
-package com.sandbox.funcprog.functor.list;
+package com.sandbox.funcprog.list;
 
 import static com.sandbox.funcprog.recursion.Bouncer.resume;
 import static com.sandbox.funcprog.recursion.Bouncer.suspend;

@@ -1,4 +1,4 @@
-package com.sandbox.funcprog.functor.list;
+package com.sandbox.funcprog.list;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

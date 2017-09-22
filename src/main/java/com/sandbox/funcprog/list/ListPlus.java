@@ -1,4 +1,4 @@
-package com.sandbox.funcprog.functor.list;
+package com.sandbox.funcprog.list;
 
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
