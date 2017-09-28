@@ -1,22 +1,17 @@
 package com.sandbox.functional.list;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import com.sandbox.functional.bifunctor.BiFunctor;
 import com.sandbox.functional.bifunctor.Both;
 import com.sandbox.functional.bifunctor.Either;
-import com.sandbox.functional.visitor.SeedFunctor;
 import com.sandbox.functional.visitor.SeedFunctorVisitor;
 
 //X ->  1 +  XxT
 //f -> Id +  fxIdT
-public class ListlFunctor<T, X> implements BiFunctor<T, X>, SeedFunctor<T, X> {
-
-	private final Either<Void, Both<X, T>> either;
+public class ListlFunctor<T, X> extends AbstractListFunctor<T, X, X, T> {
 
 	protected ListlFunctor(Either<Void, Both<X, T>> either) {
-		this.either = either;
+		super(either);
 	}
 
 	@Override
@@ -26,11 +21,7 @@ public class ListlFunctor<T, X> implements BiFunctor<T, X>, SeedFunctor<T, X> {
 
 	@Override
 	public <Y1, Y2> ListlFunctor<Y1, Y2> map(Function<T, Y1> f, Function<X, Y2> g) {
-		return new ListlFunctor<>(either.map(x -> x, both -> both.map(g, f)));
-	}
-
-	public <Z> Z apply(Z z, BiFunction<X, T, Z> biFunction) {
-		return either.apply(v -> z, both -> both.apply(biFunction));
+		return new ListlFunctor<>(preMap(g, f));
 	}
 
 	@Override
