@@ -44,4 +44,14 @@ public class ListrTest {
 		assertThat(actual).isEqualTo("(1+(2+(3+0)))");
 	}
 
+	@Test
+	public void testReverse() throws Exception {
+		// arrange
+		Listr<Integer> listr = cons(1, cons(2, cons(3, nil())));
+		// act
+		Listl<Integer>actual = listr.reverse();
+		// assert
+		assertThat(actual.trace()).isEqualTo("[3.2.1]");
+	}
+
 }
