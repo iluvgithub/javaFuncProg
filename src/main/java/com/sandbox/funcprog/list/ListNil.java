@@ -7,23 +7,23 @@ import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
-import com.sandbox.funcprog.bifunctor.Both;
-import com.sandbox.funcprog.bifunctor.Either;
+import com.sandbox.funcprog.bifunctor.Prod;
+import com.sandbox.funcprog.bifunctor.Plus;
 import com.sandbox.funcprog.recursion.Bouncer;
 
 public class ListNil<T> {
-	protected final Either<Void, Both<T, ListNil<T>>> values;
+	protected final Plus<Void, Prod<T, ListNil<T>>> values;
 
-	protected ListNil(Either<Void, Both<T, ListNil<T>>> values) {
+	protected ListNil(Plus<Void, Prod<T, ListNil<T>>> values) {
 		this.values = values;
 	}
 
 	public static final <X> ListNil<X> nil() {
-		return new ListNil<>(Either.left(null));
+		return new ListNil<>(Plus.left(null));
 	}
 
 	public static final <X> ListNil<X> cons(X x, ListNil<X> xs) {
-		return new ListNil<>(Either.right(Both.both(x, xs)));
+		return new ListNil<>(Plus.right(Prod.both(x, xs)));
 	}
 
 	public <Z> Z foldr(Z z0, BiFunction<T, Z, Z> bi) {
