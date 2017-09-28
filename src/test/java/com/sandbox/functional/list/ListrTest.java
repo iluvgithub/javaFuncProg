@@ -8,7 +8,6 @@ import java.util.function.BiFunction;
 
 import org.junit.Test;
 
-import com.sandbox.funcprog.list.ListNil;
 
 public class ListrTest {
 

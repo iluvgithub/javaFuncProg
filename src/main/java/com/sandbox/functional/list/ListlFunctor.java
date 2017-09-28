@@ -9,27 +9,27 @@ import com.sandbox.functional.bifunctor.Either;
 import com.sandbox.functional.visitor.SeedFunctor;
 import com.sandbox.functional.visitor.SeedFunctorVisitor;
 
-//X ->  1 +   TxX
-//f -> Id + IdTxf
-public class ListrFunctor<T, X> implements BiFunctor<T, X>, SeedFunctor<T, X> {
+//X ->  1 +  XxT
+//f -> Id +  fxIdT
+public class ListlFunctor<T, X> implements BiFunctor<T, X>, SeedFunctor<T, X> {
 
-	private final Either<Void, Both<T, X>> either;
+	private final Either<Void, Both<X, T>> either;
 
-	protected ListrFunctor(Either<Void, Both<T, X>> either) {
+	protected ListlFunctor(Either<Void, Both<X, T>> either) {
 		this.either = either;
 	}
 
 	@Override
-	public <Y> ListrFunctor<T, Y> map(Function<X, Y> f) {
-		return map(t -> t, f);
+	public <Y> ListlFunctor<T, Y> map(Function<X, Y> g) {
+		return map(t -> t, g);
 	}
 
 	@Override
-	public <Y1, Y2> ListrFunctor<Y1, Y2> map(Function<T, Y1> f, Function<X, Y2> g) {
-		return new ListrFunctor<>(either.map(x -> x, both -> both.map(f, g)));
+	public <Y1, Y2> ListlFunctor<Y1, Y2> map(Function<T, Y1> f, Function<X, Y2> g) {
+		return new ListlFunctor<>(either.map(x -> x, both -> both.map(g, f)));
 	}
 
-	public <Z> Z apply(Z z, BiFunction<T, X, Z> biFunction) {
+	public <Z> Z apply(Z z, BiFunction<X, T, Z> biFunction) {
 		return either.apply(v -> z, both -> both.apply(biFunction));
 	}
 
