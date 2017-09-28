@@ -50,6 +50,11 @@ public class Listr<T> implements Initial<T> {
 		};
 	}
 
+	@Override
+	public <Y> Listr<Y> map(Function<T, Y> f) {
+		return foldr(nil(), (t, ts) -> cons(f.apply(t), ts));
+	}
+
 	public Listr<T> reverse() {
 		return null;
 	}
@@ -64,12 +69,6 @@ public class Listr<T> implements Initial<T> {
 
 	private static String surround(String s) {
 		return "[" + s + "]";
-	}
-
-	@Override
-
-	public <Y> Listr<Y> map(Function<T, Y> f) {
-		return null;
 	}
 
 }

@@ -49,6 +49,10 @@ public class Listl<T> implements Initial<T> {
 
 	@Override
 	public <Y> Listl<Y> map(Function<T, Y> f) {
+		return foldl(nil(), (ts, t) -> snoc(ts, f.apply(t)));
+	}
+
+	public Listl<T> reverse() {
 		return null;
 	}
 
