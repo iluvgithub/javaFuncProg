@@ -55,7 +55,7 @@ public class Listr<T> implements Initial<T> {
 		return foldr(nil(), (t, ts) -> cons(f.apply(t), ts));
 	}
 
-	public Listl<T> reverse() {
+	public Listl<T> converse() {
 		return foldr(Listl.nil(), (t, ts) -> Listl.snoc(ts, t));
 	}
 

@@ -45,11 +45,11 @@ public class ListrTest {
 	}
 
 	@Test
-	public void testReverse() throws Exception {
+	public void testConverse() throws Exception {
 		// arrange
 		Listr<Integer> listr = cons(1, cons(2, cons(3, nil())));
 		// act
-		Listl<Integer>actual = listr.reverse();
+		Listl<Integer> actual = listr.converse();
 		// assert
 		assertThat(actual.trace()).isEqualTo("[3.2.1]");
 	}

@@ -52,7 +52,7 @@ public class Listl<T> implements Initial<T> {
 		return foldl(nil(), (ts, t) -> snoc(ts, f.apply(t)));
 	}
 
-	public Listr<T> reverse() {
+	public Listr<T> converse() {
 		return foldl(Listr.nil(), (t, ts) -> Listr.cons(ts, t));
 
 	}
