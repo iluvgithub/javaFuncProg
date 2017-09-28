@@ -9,11 +9,9 @@ import java.util.function.Function;
 
 import com.sandbox.funcprog.bifunctor.Both;
 import com.sandbox.funcprog.bifunctor.Either;
-import com.sandbox.funcprog.functor.Functor;
 import com.sandbox.funcprog.recursion.Bouncer;
 
-public class ListNil<T> implements Functor<T> {
-
+public class ListNil<T> {
 	protected final Either<Void, Both<T, ListNil<T>>> values;
 
 	protected ListNil(Either<Void, Both<T, ListNil<T>>> values) {
@@ -64,7 +62,6 @@ public class ListNil<T> implements Functor<T> {
 		return foldl(nil(), (ts, t) -> cons(t, ts));
 	}
 
-	@Override
 	public <Y> ListNil<Y> map(Function<T, Y> f) {
 		return foldr(nil(), (t, ys) -> cons(f.apply(t), ys));
 	}
