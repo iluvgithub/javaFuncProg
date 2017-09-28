@@ -8,7 +8,6 @@ import java.util.function.BiFunction;
 
 import org.junit.Test;
 
-
 public class ListrTest {
 
 	@Test
@@ -31,7 +30,7 @@ public class ListrTest {
 		// act
 		Listr<String> actuals = list.map(String::toUpperCase);
 		// assert
-		//assertThat(actuals.trace()).isEqualTo("[A.B.C]");
+		assertThat(actuals.trace()).isEqualTo("[A.B.C]");
 	}
 
 	@Test

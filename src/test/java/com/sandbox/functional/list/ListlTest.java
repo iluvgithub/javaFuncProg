@@ -30,7 +30,7 @@ public class ListlTest {
 		// act
 		Listl<String> actuals = list.map(String::toUpperCase);
 		// assert
-		// assertThat(actuals.trace()).isEqualTo("[A.B.C]");
+		assertThat(actuals.trace()).isEqualTo("[A.B.C]");
 	}
 
 	@Test
