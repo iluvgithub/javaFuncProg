@@ -10,7 +10,7 @@ import java.util.function.Function;
  * @param <LEFT>
  * @param <RIGHT>
  */
-public class Both<LEFT, RIGHT> implements BiFunctor<LEFT, RIGHT> {
+public class Both<LEFT, RIGHT>     {
 
 	private final LEFT l;
 	private final RIGHT r;
@@ -32,8 +32,7 @@ public class Both<LEFT, RIGHT> implements BiFunctor<LEFT, RIGHT> {
 	public RIGHT right() {
 		return r;
 	}
-
-	@Override
+ 
 	public <Y1, Y2> Both<Y1, Y2> map(Function<LEFT, Y1> f, Function<RIGHT, Y2> g) {
 		return both(f.apply(l), g.apply(r));
 	}

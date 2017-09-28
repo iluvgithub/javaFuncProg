@@ -10,7 +10,7 @@ import java.util.function.Predicate;
  * @param <LEFT>
  * @param <RIGHT>
  */
-public abstract class Either<LEFT, RIGHT> implements BiFunctor<LEFT, RIGHT> {
+public abstract class Either<LEFT, RIGHT> {
 
 	public static <L, R> Either<L, R> left(L l) {
 		return new Left<>(l);
@@ -26,7 +26,6 @@ public abstract class Either<LEFT, RIGHT> implements BiFunctor<LEFT, RIGHT> {
 		return t -> p.test(t) ? left(t) : right(t);
 	}
 
-	@Override
 	public <Y1, Y2> Either<Y1, Y2> map(Function<LEFT, Y1> f, Function<RIGHT, Y2> g) {
 		return apply(l -> left(f.apply(l)), r -> right(g.apply(r)));
 	}
