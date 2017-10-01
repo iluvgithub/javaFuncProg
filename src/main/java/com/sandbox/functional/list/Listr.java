@@ -28,6 +28,10 @@ public class Listr<T> implements Initial<T> {
 		return new Listr<>(right(both(x, xs)));
 	}
 
+	
+	
+	
+	
 	@Override
 	public ListrFunctor<T, Initial<T>> out() {
 		return values.map(x -> x);
@@ -45,7 +49,7 @@ public class Listr<T> implements Initial<T> {
 		return new SeedFunctorVisitor<T, Z>() {
 			@Override
 			public Z visit(ListrFunctor<T, Z> target) {
-				return target.apply(v->z, bi);
+				return target.apply(v -> z, bi);
 			}
 		};
 	}

@@ -41,6 +41,10 @@ public class Listl<T> implements Initial<T> {
 		return cata(seedFunctor -> seedFunctor.accept(visitor(z, bi)));
 	}
 
+	public <Z> Z foldr(Z z, BiFunction<T, Z, Z> bi) {
+		return null;
+	}
+
 	private <Z> SeedFunctorVisitor<T, Z> visitor(Z z, BiFunction<Z, T, Z> bi) {
 		return new SeedFunctorVisitor<T, Z>() {
 			@Override
@@ -57,7 +61,6 @@ public class Listl<T> implements Initial<T> {
 
 	public Listr<T> converse() {
 		return foldl(Listr.nil(), (t, ts) -> Listr.cons(ts, t));
-
 	}
 
 	public String trace() {
