@@ -39,7 +39,6 @@ public class Listl<T> implements Initial<T> {
 
 	public <Z> Z foldl(Z z, BiFunction<Z, T, Z> bi) {
 		return cata(seedFunctor -> seedFunctor.accept(visitor(z, bi)));
-
 	}
 
 	private <Z> SeedFunctorVisitor<T, Z> visitor(Z z, BiFunction<Z, T, Z> bi) {

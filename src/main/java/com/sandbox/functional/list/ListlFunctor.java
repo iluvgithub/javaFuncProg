@@ -10,7 +10,7 @@ import com.sandbox.functional.visitor.SeedFunctorVisitor;
 
 //X ->  1 +  XxT
 //f -> Id +  fxIdT
-public class ListlFunctor<T, X> extends GenericList<Void, X, T> implements SeedFunctor<T, X>, BiFunctor<T, X> {
+public class ListlFunctor<T, X> extends GenericListFunctor<Void, X, T> implements SeedFunctor<T, X>, BiFunctor<T, X> {
 
 	protected ListlFunctor(Either<Void, Both<X, T>> either) {
 		super(either);
