@@ -46,7 +46,7 @@ public class Listl<T> implements Initial<T> {
 		return new SeedFunctorVisitor<T, Z>() {
 			@Override
 			public Z visit(ListlFunctor<T, Z> target) {
-				return target.apply(z, bi);
+				return target.apply(v -> z, bi);
 			}
 		};
 	}
