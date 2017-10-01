@@ -28,6 +28,10 @@ public class Listl<T> implements Initial<T> {
 		return new Listl<>(right(both(xs, x)));
 	}
 
+	public Listl<T> snoc(T t) {
+		return snoc(this, t);
+	}
+
 	@Override
 	public ListlFunctor<T, Initial<T>> out() {
 		return values.map(x -> x);

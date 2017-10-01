@@ -36,7 +36,8 @@ public class ListlTest {
 	@Test
 	public void testFoldl() throws Exception {
 		// arrange
-		Listl<Integer> list = snoc(snoc(snoc(nil(), 1), 2), 3);
+		Listl<Integer> nil = nil();
+		Listl<Integer> list = nil.snoc(1).snoc(2).snoc(3);
 		BiFunction<String, Integer, String> bi = (a, b) -> "(" + a + "+" + b + ")";
 		// act
 		String actual = list.foldl("0", bi);
