@@ -17,8 +17,8 @@ public class ListlFunctor<T, X> extends GenericListFunctor<Void, X, T> implement
 	}
 
 	@Override
-	public <Y> ListlFunctor<T, Y> map(Function<X, Y> g) {
-		return map(t -> t, g);
+	public <Y> ListlFunctor<T, Y> map(Function<X, Y> f) {
+		return map(t -> t, f);
 	}
 
 	@Override
