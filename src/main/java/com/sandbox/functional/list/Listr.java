@@ -37,7 +37,7 @@ public class Listr<T> implements Initial<T> {
 		return values.map(x -> x);
 	}
 
-	public <Z> Z foldl(Z z0, BiFunction<Z, T, Z> bi) {
+	public <Z> Z foldl(Z z, BiFunction<Z, T, Z> bi) {
 		return null;
 	}
 
