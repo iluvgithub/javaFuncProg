@@ -10,9 +10,6 @@ import java.util.stream.IntStream;
 
 import org.junit.Test;
 
-import com.sandbox.funcprog.list.ListNil;
- 
-
 public class ListNilTest {
 
 	protected <T> ListNil<T> asListArray(T[] ts) {
@@ -119,7 +116,7 @@ public class ListNilTest {
 	@Test
 	public void testMap() throws Exception {
 		// arrange
-		ListNil<String> list = cons("a", cons("b", cons("c",nil())));
+		ListNil<String> list = cons("a", cons("b", cons("c", nil())));
 		// act
 		ListNil<String> actuals = list.map(String::toUpperCase);
 		// assert

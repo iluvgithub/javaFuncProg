@@ -10,8 +10,6 @@ import java.util.stream.IntStream;
 
 import org.junit.Test;
 
-import com.sandbox.funcprog.list.ListPlus;
-
 public class ListPlusTest {
 
 	protected <T> ListPlus<T> asListArray(T[] ts) {
@@ -51,7 +49,7 @@ public class ListPlusTest {
 	@Test
 	public void testFoldlMass() throws Exception {
 		// arrange
-		int n = 30000;
+		int n = 30001;
 		Integer[] array = IntStream.range(0, n).map(i -> 1 + i).boxed().toArray(Integer[]::new);
 		ListPlus<Integer> list = asListArray(array);
 		BinaryOperator<Integer> bi = (a, b) -> a + b;
