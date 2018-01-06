@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 
 /**
  *
- * Either represents an alternative between two Objects.
+ * Plus represents an alternative between two Objects.
  *
  * @param <LEFT>
  * @param <RIGHT>
@@ -28,16 +28,6 @@ public abstract class Plus<LEFT, RIGHT> {
 
 	public <Y1, Y2> Plus<Y1, Y2> map(Function<LEFT, Y1> f, Function<RIGHT, Y2> g) {
 		return apply(l -> left(f.apply(l)), r -> right(g.apply(r)));
-	}
-
-	// (a+b) -> (b+a)
-	public Plus<RIGHT, LEFT> swap() {
-		return apply(a -> right(a), b -> left(b));
-	}
-
-	// (a+b)+c -> a+(b+c)
-	public static <A, B, C> Plus<A, Plus<B, C>> assocr(Plus<Plus<A, B>, C> input) {
-		return input.apply(ab -> ab.apply(a -> left(a), b -> right(new Left<>(b))), c -> right(new Right<>(c)));
 	}
 
 	private static final class Left<LEFT, RIGHT> extends Plus<LEFT, RIGHT> {

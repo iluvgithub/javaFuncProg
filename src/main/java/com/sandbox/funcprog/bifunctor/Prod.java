@@ -37,15 +37,6 @@ public class Prod<LEFT, RIGHT>     {
 		return both(f.apply(l), g.apply(r));
 	}
 
-	// (a+b) -> (b+a)
-	public Prod<RIGHT, LEFT> swap() {
-		return both(right(), left());
-	}
-
-	public static <A, B, C> Prod<A, Prod<B, C>> assocr(Prod<Prod<A, B>, C> input) {
-		return both(input.left().left(), both(input.left().right(), input.right()));
-	}
-
 	public <Z> Z apply(BiFunction<LEFT, RIGHT, Z> bi) {
 		return bi.apply(left(), right());
 	}
