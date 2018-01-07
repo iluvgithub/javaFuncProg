@@ -10,7 +10,7 @@ import java.util.function.Function;
  * @param <LEFT>
  * @param <RIGHT>
  */
-public class Prod<LEFT, RIGHT>     {
+public class Prod<LEFT, RIGHT> {
 
 	private final LEFT l;
 	private final RIGHT r;
@@ -21,7 +21,7 @@ public class Prod<LEFT, RIGHT>     {
 		this.r = r;
 	}
 
-	public static <L, R> Prod<L, R> both(L l, R r) {
+	public static <L, R> Prod<L, R> prod(L l, R r) {
 		return new Prod<>(l, r);
 	}
 
@@ -32,9 +32,9 @@ public class Prod<LEFT, RIGHT>     {
 	public RIGHT right() {
 		return r;
 	}
- 
+
 	public <Y1, Y2> Prod<Y1, Y2> map(Function<LEFT, Y1> f, Function<RIGHT, Y2> g) {
-		return both(f.apply(l), g.apply(r));
+		return prod(f.apply(l), g.apply(r));
 	}
 
 	public <Z> Z apply(BiFunction<LEFT, RIGHT, Z> bi) {
