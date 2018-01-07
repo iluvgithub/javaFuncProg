@@ -33,4 +33,24 @@ public class LazyStreamTest {
 		assertThat(actual.get().left()).isEqualTo("a");
 	}
 
+	@Test
+	public void testApplyOnEmpty() {
+		// given
+		LazyStream<String> stream = nil();
+		// when
+		String actual = stream.apply("e", (x, y) -> x + "." + y);
+		// then
+		assertThat(actual).isEqualTo("e");
+	}
+
+	@Test
+	public void testApplyOnCons() {
+		// given
+		LazyStream<String> stream = cons(() -> "a", () -> nil());
+		// when
+		String actual = stream.apply("e", (x, y) -> x);
+		// then
+		assertThat(actual).isEqualTo("a");
+
+	}
 }

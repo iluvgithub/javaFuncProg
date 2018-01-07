@@ -19,8 +19,8 @@ public abstract class LazyStream<T> {
 
 	protected abstract Optional<Prod<T, LazyStream<T>>> headTail();
 
-	public <Z> Z apply(BiFunction<T, LazyStream<T>, Z> biFunction) {
-		return null;
+	public <Z> Z apply(Z defaultValue, BiFunction<T, LazyStream<T>, Z> biFunction) {
+		return headTail().map(headTail -> headTail.apply(biFunction)).orElse(defaultValue);
 	}
 
 	private static class Empty<T> extends LazyStream<T> {
