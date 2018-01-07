@@ -6,6 +6,7 @@ import static com.sandbox.funcprog.tailrecursion.Bouncer.suspend;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.sandbox.funcprog.bifunctor.Prod;
@@ -31,6 +32,10 @@ public abstract class LazyStream<T> {
 		return headTail().map(headTail -> headTail.apply(biFunction)).orElse(defaultValue);
 	}
 
+	public <Z> Z foldLeft(Z z, Function<Z, Function<T, Z>> f) {
+		return foldLeft(z, (x,y) -> f.apply(x).apply(y));
+	}
+	
 	public <Z> Z foldLeft(Z z, BiFunction<Z, T, Z> biFunction) {
 		return bounceFoldLeft(z, biFunction).call();
 	}

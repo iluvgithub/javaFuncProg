@@ -60,10 +60,12 @@ public class LazyStreamTest {
 		// given
 		LazyStream<Integer> stream = fromList(asList(0, 1, 2));
 		// when
-		String actual = stream.foldLeft("e", (x, y) -> x + "." + y);
+		String actual0 = stream.foldLeft("e", (x, y) -> x + "." + y);
+		String actual1 = stream.foldLeft("E", x -> y -> x + "_" + y);
 		// then
 		assertThat(stream.apply(-1, (hd, tl) -> hd)).isEqualTo(0);
-		assertThat(actual).isEqualTo("e.0.1.2");
+		assertThat(actual0).isEqualTo("e.0.1.2");
+		assertThat(actual1).isEqualTo("E_0_1_2");
 	}
 
 	private <X> LazyStream<X> fromList(List<X> list) {
