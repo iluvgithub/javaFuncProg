@@ -76,4 +76,14 @@ public class LazyStreamTest {
 		return out;
 	}
 
+	@Test
+	public void testTrace() {
+		// given
+		LazyStream<Integer> stream = fromList(asList(0, 1, 2));
+		// when
+		String actual = stream.trace();
+		// then
+		assertThat(actual).isEqualTo("0.1.2");
+	}
+
 }

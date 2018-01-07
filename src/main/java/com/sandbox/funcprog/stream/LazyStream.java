@@ -4,7 +4,6 @@ import static com.sandbox.funcprog.bifunctor.Prod.prod;
 import static com.sandbox.funcprog.tailrecursion.Bouncer.resume;
 import static com.sandbox.funcprog.tailrecursion.Bouncer.suspend;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -32,12 +31,16 @@ public abstract class LazyStream<T> {
 		return headTail().map(headTail -> headTail.apply(biFunction)).orElse(defaultValue);
 	}
 
-	public <Z> Z foldLeft(Z z, BiFunction<Z,T,Z> biFunction) {
-		return bounceFoldLeft(z,biFunction).call();
+	public <Z> Z foldLeft(Z z, BiFunction<Z, T, Z> biFunction) {
+		return bounceFoldLeft(z, biFunction).call();
 	}
 
 	private <Z> Bouncer<Z> bounceFoldLeft(Z z, BiFunction<Z, T, Z> bi) {
 		return apply(resume(z), (head, tail) -> suspend(() -> tail.bounceFoldLeft(bi.apply(z, head), bi)));
+	}
+
+	public String trace() {
+		return foldLeft("", (s, y) -> s + (s.equals("") ? "" : ".") + y);
 	}
 
 	private static class Empty<T> extends LazyStream<T> {
