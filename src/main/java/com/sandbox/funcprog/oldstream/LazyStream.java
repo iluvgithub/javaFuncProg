@@ -1,5 +1,6 @@
-package com.sandbox.funcprog.stream;
+package com.sandbox.funcprog.oldstream;
 
+import static com.sandbox.funcprog.bifunctor.Plus.asSwitch;
 import static com.sandbox.funcprog.bifunctor.Prod.prod;
 import static com.sandbox.funcprog.tailrecursion.Bouncer.resume;
 import static com.sandbox.funcprog.tailrecursion.Bouncer.suspend;
@@ -7,6 +8,7 @@ import static com.sandbox.funcprog.tailrecursion.Bouncer.suspend;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import com.sandbox.funcprog.bifunctor.Prod;
@@ -33,9 +35,9 @@ public abstract class LazyStream<T> {
 	}
 
 	public <Z> Z foldLeft(Z z, Function<Z, Function<T, Z>> f) {
-		return foldLeft(z, (x,y) -> f.apply(x).apply(y));
+		return foldLeft(z, (x, y) -> f.apply(x).apply(y));
 	}
-	
+
 	public <Z> Z foldLeft(Z z, BiFunction<Z, T, Z> biFunction) {
 		return bounceFoldLeft(z, biFunction).call();
 	}
@@ -46,6 +48,26 @@ public abstract class LazyStream<T> {
 
 	public String trace() {
 		return foldLeft("", (s, y) -> s + (s.equals("") ? "" : ".") + y);
+	}
+
+	public static <S, X> Function<S, LazyStream<X>> anamorphism(Predicate<S> p, Function<S, Prod<X, S>> g) {
+		return anamorphism(s0 -> asSwitch(p).apply(s0).apply(s -> Optional.empty(), s -> Optional.of(g.apply(s))));
+	}
+
+	public static <S, X> Function<S, LazyStream<X>> anamorphism(Function<S, Optional<Prod<X, S>>> g) {
+		return s0 -> g.apply(s0).map(prod -> prod.apply((x, s) -> cons(() -> x, () -> anamorphism(g).apply(s))))
+				.orElse(nil());
+	}
+
+	public <Y> LazyStream<Y> map(Function<T, Y> f) {
+		return null;
+		/**
+		LazyStream.<LazyStream<T>,Y>anamorphism( ts-> ts.apply( nil(), (t,ts) -> cons(
+					() -> f.apply(t),
+					() -> ts.map(f)
+					)
+				) ).apply(this);
+				*/
 	}
 
 	private static class Empty<T> extends LazyStream<T> {

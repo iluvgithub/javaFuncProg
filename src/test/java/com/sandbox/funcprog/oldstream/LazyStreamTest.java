@@ -1,20 +1,21 @@
-package com.sandbox.funcprog.stream;
+package com.sandbox.funcprog.oldstream;
 
-import static com.sandbox.funcprog.stream.LazyStream.cons;
-import static com.sandbox.funcprog.stream.LazyStream.nil;
+import static com.sandbox.funcprog.bifunctor.Prod.prod;
+import static com.sandbox.funcprog.oldstream.LazyStream.anamorphism;
+import static com.sandbox.funcprog.oldstream.LazyStream.cons;
+import static com.sandbox.funcprog.oldstream.LazyStream.nil;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.junit.Test;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import com.sandbox.funcprog.bifunctor.Prod;
 
 public class LazyStreamTest {
 
-	@Test
 	public void testHeadTailOnEmpty() {
 		// given
 		LazyStream<Object> stream = nil();
@@ -24,7 +25,6 @@ public class LazyStreamTest {
 		assertThat(actual).isEmpty();
 	}
 
-	@Test
 	public void testHeadTailOnCons() {
 		// given
 		LazyStream<String> stream = cons(() -> "a", () -> nil());
@@ -35,7 +35,6 @@ public class LazyStreamTest {
 		assertThat(actual.get().left()).isEqualTo("a");
 	}
 
-	@Test
 	public void testApplyOnEmpty() {
 		// given
 		LazyStream<String> stream = nil();
@@ -45,7 +44,6 @@ public class LazyStreamTest {
 		assertThat(actual).isEqualTo("e");
 	}
 
-	@Test
 	public void testApplyOnCons() {
 		// given
 		LazyStream<String> stream = cons(() -> "a", () -> nil());
@@ -55,7 +53,6 @@ public class LazyStreamTest {
 		assertThat(actual).isEqualTo("a");
 	}
 
-	@Test
 	public void testFoldLeft() {
 		// given
 		LazyStream<Integer> stream = fromList(asList(0, 1, 2));
@@ -78,7 +75,6 @@ public class LazyStreamTest {
 		return out;
 	}
 
-	@Test
 	public void testTrace() {
 		// given
 		LazyStream<Integer> stream = fromList(asList(0, 1, 2));
@@ -88,4 +84,22 @@ public class LazyStreamTest {
 		assertThat(actual).isEqualTo("0.1.2");
 	}
 
+	public void testAnamorphism() {
+		// given
+		Predicate<Integer> p = n -> n == 0;
+		Function<Integer, Prod<String, Integer>> g = n -> prod(n.toString(), n - 1);
+		// when
+		LazyStream<String> actual = anamorphism(p, g).apply(3);
+		// then
+		assertThat(actual.trace()).isEqualTo("3.2.1");
+	}
+
+	public void testMap() {
+		// given
+		LazyStream<Integer> stream = fromList(asList(0, 1, 2));
+		// when
+		LazyStream<String> actual = stream.map(x -> x.toString());
+		// then
+		assertThat(actual).isEqualTo("0.1.2");
+	}
 }
