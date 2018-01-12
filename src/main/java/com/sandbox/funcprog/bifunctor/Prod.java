@@ -37,6 +37,14 @@ public class Prod<LEFT, RIGHT> {
 		return prod(f.apply(l), g.apply(r));
 	}
 
+	public <Y> Prod<Y, RIGHT> mapLeft(Function<LEFT, Y> f) {
+		return map(f, r -> r);
+	}
+
+	public <Z> Prod<LEFT, Z> mapRight(Function<RIGHT, Z> g) {
+		return map(l -> l, g);
+	}
+
 	public <Z> Z apply(BiFunction<LEFT, RIGHT, Z> bi) {
 		return bi.apply(left(), right());
 	}

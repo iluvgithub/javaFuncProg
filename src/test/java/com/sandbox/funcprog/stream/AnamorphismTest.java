@@ -1,6 +1,7 @@
 package com.sandbox.funcprog.stream;
 
 import static com.sandbox.funcprog.bifunctor.Prod.prod;
+import static com.sandbox.funcprog.stream.Anamorphism.from;
 import static com.sandbox.funcprog.stream.Anamorphism.unfold;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,7 +16,6 @@ public class AnamorphismTest {
 
 	@Test
 	public void testGenerate() {
-
 		// given
 		Predicate<Integer> p = n -> n == 0;
 		Function<Integer, Prod<String, Integer>> g = n -> prod(n.toString(), n - 1);
@@ -23,6 +23,16 @@ public class AnamorphismTest {
 		ConsList<String> actual = unfold(p, g).apply(3);
 		// then
 		assertThat(actual.trace()).isEqualTo("3.2.1");
+	}
+
+	@Test
+	public void testIterate() {
+		// given
+		ConsList<Integer> infinite = from(0).takeWhile(n -> n < 4);
+		// when
+		String actual = infinite.trace();
+		// then
+		assertThat(actual).isEqualTo("0.1.2.3");
 	}
 
 	@Test
