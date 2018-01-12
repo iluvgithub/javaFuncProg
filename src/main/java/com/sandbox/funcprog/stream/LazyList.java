@@ -1,6 +1,7 @@
 package com.sandbox.funcprog.stream;
 
 import static com.sandbox.funcprog.bifunctor.Prod.prod;
+import static com.sandbox.funcprog.stream.Anamorphism.unfold;
 import static com.sandbox.funcprog.tailrecursion.Bouncer.resume;
 import static com.sandbox.funcprog.tailrecursion.Bouncer.suspend;
 import static java.util.Optional.empty;
@@ -31,7 +32,7 @@ public class LazyList<A> implements ConsList<A> {
 		return new LazyList<X>(of(() -> prod(x.get(), xs.get())));
 	}
 
-	public static ConsList<Integer> makeIntList(Integer fromIncluded, Integer toExcluded) {
+	public static ConsList<Integer> makeIntList(Integer fromIncluded, Integer toExcluded) { // todo: simplify
 		return Anamorphism.<Integer, Integer>unfold(n -> n.equals(toExcluded), n -> prod(n, n + 1)).apply(fromIncluded);
 	}
 
@@ -60,7 +61,11 @@ public class LazyList<A> implements ConsList<A> {
 
 	@Override
 	public <B> ConsList<B> map(Function<A, B> f) {
-		return Anamorphism.<ConsList<A>, B>unfold(xs -> xs.out().map(prod -> prod.mapLeft(f))).apply(this);
+		return unfold(subMap(f)).apply(this);
+	}
+
+	private static <X, Y> Function<ConsList<X>, Optional<Prod<Y, ConsList<X>>>> subMap(Function<X, Y> f) {
+		return xs -> xs.out().map(prod -> prod.mapLeft(f));
 	}
 
 	@Override
