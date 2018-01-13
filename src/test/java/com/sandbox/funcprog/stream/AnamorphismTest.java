@@ -47,4 +47,13 @@ public class AnamorphismTest {
 		assertThat(actual).isEqualTo(input * (input + 1) / 2);
 	}
 
+	@Test
+	public void testMakeIntList() {
+		// given
+		ConsList<Integer> list = Anamorphism.fromTo(0,3);
+		// when
+		String actual = list.trace();
+		// then
+		assertThat(actual).isEqualTo("0.1.2");
+	}
 }

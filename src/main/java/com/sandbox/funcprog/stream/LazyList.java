@@ -32,9 +32,6 @@ public class LazyList<A> implements ConsList<A> {
 		return new LazyList<X>(of(() -> prod(x.get(), xs.get())));
 	}
 
-	public static ConsList<Integer> makeIntList(Integer fromIncluded, Integer toExcluded) { // todo: simplify
-		return Anamorphism.<Integer, Integer>unfold(n -> n.equals(toExcluded), n -> prod(n, n + 1)).apply(fromIncluded);
-	}
 
 	@Override
 	public Optional<Prod<A, ConsList<A>>> out() {

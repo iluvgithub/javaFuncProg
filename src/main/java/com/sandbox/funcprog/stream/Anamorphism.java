@@ -40,6 +40,10 @@ public class Anamorphism {
 		return iterate(n, x -> x + 1);
 	}
 
+	public static ConsList<Integer> fromTo(Integer fromIncluded, Integer toExcluded) {
+		return from(fromIncluded).takeWhile(n -> n < toExcluded);
+	}
+
 	public static <Z> ConsList<Z> iterate(Z from, UnaryOperator<Z> op) {
 		return unfold(z -> false, iterateStep(op)).apply(from);
 	}
