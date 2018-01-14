@@ -29,11 +29,11 @@ public class Anamorphism {
 	}
 
 	private static <X> ConsList<X> nil() {
-		return LazyList.nil();
+		return ConsList.nil();
 	}
 
 	private static <X> ConsList<X> cons(Supplier<X> x, Supplier<ConsList<X>> xs) {
-		return LazyList.cons(x, xs);
+		return ConsList.cons(x, xs);
 	}
 
 	public static ConsList<Integer> from(Integer n) {

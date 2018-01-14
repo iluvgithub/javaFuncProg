@@ -5,14 +5,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-public abstract class ConsListTest {
+public class ConsListTest {
 
-	abstract <A> ConsList<A> nil();
+	private <A> ConsList<A> nil() {
+		return ConsList.nil();
+	}
 
-	abstract <A> ConsList<A> cons(A a, ConsList<A> list);
+	private <A> ConsList<A> cons(A a, ConsList<A> list) {
+		return ConsList.cons(() -> a, () -> list);
+	}
 
 	@Test
 	public void testFoldLeft() {
@@ -63,7 +66,7 @@ public abstract class ConsListTest {
 		// then
 		assertThat(actuals.trace()).isEqualTo("A.B.C");
 	}
-	
+
 	@Test
 	public void testFoldRight() {
 		// given
@@ -84,7 +87,7 @@ public abstract class ConsListTest {
 		ConsList<Integer> nil = nil();
 		ConsList<Integer> list0 = cons(3, nil);
 		ConsList<Integer> list1 = cons(0, cons(1, cons(2, nil)));
-		Predicate<Integer> p = n -> n <3;
+		Predicate<Integer> p = n -> n < 3;
 		// when
 		ConsList<Integer> actual = nil.takeWhile(p);
 		ConsList<Integer> actual0 = list0.takeWhile(p);
