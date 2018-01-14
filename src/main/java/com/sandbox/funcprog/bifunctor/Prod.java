@@ -15,7 +15,7 @@ public class Prod<LEFT, RIGHT> {
 	private final LEFT l;
 	private final RIGHT r;
 
-	private Prod(LEFT l, RIGHT r) {
+	protected Prod(LEFT l, RIGHT r) {
 		super();
 		this.l = l;
 		this.r = r;
