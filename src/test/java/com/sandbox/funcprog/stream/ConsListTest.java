@@ -3,6 +3,7 @@ package com.sandbox.funcprog.stream;
 import static com.sandbox.funcprog.stream.Anamorphism.iterate;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Comparator;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -183,6 +184,17 @@ public class ConsListTest {
 		ConsList<String> actual = left.flatMap(f);
 		// then
 		assertThat(actual.trace()).isEqualTo("1.2.2.3.3.3");
+	}
+
+	@Test
+	public void testSort() {
+		// given
+		ConsList<Integer> list = cons(2, cons(1, cons(0, nil())));
+		Comparator<Integer> comp = (a, b) -> a.compareTo(b);
+		// when
+		ConsList<Integer> actuals = list.sort(comp);
+		// then
+		assertThat(actuals.trace()).isEqualTo("0.1.2");
 	}
 
 }

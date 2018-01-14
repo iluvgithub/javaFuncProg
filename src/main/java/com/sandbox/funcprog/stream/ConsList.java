@@ -7,11 +7,13 @@ import static com.sandbox.funcprog.tailrecursion.Bouncer.suspend;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import com.sandbox.funcprog.bifunctor.Prod;
 import com.sandbox.funcprog.tailrecursion.Bouncer;
@@ -44,12 +46,16 @@ public class ConsList<A> {
 		return of(this).filter(ConsList::isNotEmpty);
 	}
 
-	public <B> B foldLeft(B id, BiFunction<B, A, B> biFunction) {
-		return bounceFoldLeft(this, id, biFunction).call();
+	public <B> B foldLeft(B init, BiFunction<B, A, B> biFunction) {
+		return bounceFoldLeft(this, init, biFunction).call();
 	}
 
 	private static <U, V> Bouncer<V> bounceFoldLeft(ConsList<U> list, V out, BiFunction<V, U, V> bi) {
 		return apply(list, resume(out), (hd, tl) -> suspend(() -> bounceFoldLeft(tl, bi.apply(out, hd), bi)));
+	}
+
+	private <V> V outApply(V cumulated, BiFunction<A, ConsList<A>, V> biFunction) {
+		return apply(this, cumulated, biFunction);
 	}
 
 	private static <U, V> V apply(ConsList<U> list, V cumulated, BiFunction<U, ConsList<U>, V> biFunction) {
@@ -103,7 +109,6 @@ public class ConsList<A> {
 
 	private <B> Optional<Prod<Prod<A, B>, Prod<ConsList<A>, ConsList<B>>>> optSubzip(ConsList<B> ys) {
 		return ys.nonEmptyList().flatMap(bs -> nonEmptyList().map(as -> as.subzip(bs)));
-
 	}
 
 	private <B> Prod<Prod<A, B>, Prod<ConsList<A>, ConsList<B>>> subzip(ConsList<B> ys) {
@@ -140,6 +145,20 @@ public class ConsList<A> {
 
 	public <B> ConsList<B> flatMap(Function<A, ConsList<B>> f) {
 		return flatten(foldRight(nil(), (a, bs) -> cons(f.apply(a), bs)));
+	}
+
+	public ConsList<A> sort(Comparator<A> comp) {
+		return ConsList.<A, ConsList<A>>apply(this, nil(),
+				(hd, tl) -> subSort(comp).apply(hd, tl).apply((l, r) -> l.concat(prepend(hd).apply(r))));
+	}
+
+	private static <X> BiFunction<X, ConsList<X>, Prod<ConsList<X>, ConsList<X>>> subSort(Comparator<X> comp) {
+		return (x0, tl) -> tl.foldLeft(prod(nil(), nil()),
+				(prd, x) -> comp.compare(x0, x) < 0 ? prd.mapRight(prepend(x)) : prd.mapLeft(prepend(x)));
+	}
+
+	private static <X> UnaryOperator<ConsList<X>> prepend(X x) {
+		return xs -> cons(x, xs);
 	}
 
 }
