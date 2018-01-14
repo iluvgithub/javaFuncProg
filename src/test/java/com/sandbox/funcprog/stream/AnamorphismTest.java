@@ -2,7 +2,6 @@ package com.sandbox.funcprog.stream;
 
 import static com.sandbox.funcprog.bifunctor.Prod.prod;
 import static com.sandbox.funcprog.stream.Anamorphism.from;
-import static com.sandbox.funcprog.stream.Anamorphism.unfold;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.function.Function;
@@ -20,7 +19,7 @@ public class AnamorphismTest {
 		Predicate<Integer> p = n -> n == 0;
 		Function<Integer, Prod<String, Integer>> g = n -> prod(n.toString(), n - 1);
 		// when
-		ConsList<String> actual = unfold(p, g).apply(3);
+		ConsList<String> actual = new Anamorphism<>(p, g).unfold(3);
 		// then
 		assertThat(actual.trace()).isEqualTo("3.2.1");
 	}
@@ -42,7 +41,7 @@ public class AnamorphismTest {
 		Predicate<Integer> p = n -> n == 0;
 		Function<Integer, Prod<Integer, Integer>> g = n -> prod(n, n - 1);
 		// when
-		Integer actual = unfold(p, g).apply(input).foldLeft(0, (a, b) -> a + b);
+		Integer actual = new Anamorphism<>(p, g).unfold(input).foldLeft(0, (a, b) -> a + b);
 		// then
 		assertThat(actual).isEqualTo(input * (input + 1) / 2);
 	}
@@ -50,7 +49,7 @@ public class AnamorphismTest {
 	@Test
 	public void testMakeIntList() {
 		// given
-		ConsList<Integer> list = Anamorphism.fromTo(0,3);
+		ConsList<Integer> list = Anamorphism.fromTo(0, 3);
 		// when
 		String actual = list.trace();
 		// then

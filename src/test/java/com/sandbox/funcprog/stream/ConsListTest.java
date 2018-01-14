@@ -1,11 +1,15 @@
 package com.sandbox.funcprog.stream;
 
+import static com.sandbox.funcprog.stream.Anamorphism.iterate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.junit.Test;
+
+import com.sandbox.funcprog.bifunctor.Prod;
 
 public class ConsListTest {
 
@@ -99,6 +103,39 @@ public class ConsListTest {
 	}
 
 	@Test
+	public void testZip() {
+		// given
+		ConsList<Integer> ints = cons(1, cons(2, nil()));
+		ConsList<String> strings = cons("a", cons("b", cons("c", nil())));
+		// when
+		ConsList<Prod<String, Integer>> act0 = strings.zip(ints);
+		ConsList<Prod<Integer, String>> act1 = ints.zip(strings);
+		// then
+		assertThat(act0.map(this::traceProd).trace()).isEqualTo("[a.1].[b.2]");
+		assertThat(act1.map(this::traceProd).trace()).isEqualTo("[1.a].[2.b]");
+	}
+
+	private <X, Y> String traceProd(Prod<X, Y> xy) {
+		return xy.apply((x, y) -> "[" + x + "." + y + "]");
+	}
+
+	@Test
+	public void testTakeN() {
+		// given
+		ConsList<Integer> nil = nil();
+		ConsList<Integer> list1 = cons(0, cons(1, cons(2, cons(3, nil))));
+		int n = 3;
+		// when
+		ConsList<Integer> actual = nil.take(n);
+		ConsList<Integer> actual1 = list1.take(n);
+		ConsList<Integer> actual2 = list1.take(123);
+		// then
+		assertThat(actual.trace()).isEqualTo("");
+		assertThat(actual1.trace()).isEqualTo("0.1.2");
+		assertThat(actual2.trace()).isEqualTo("0.1.2.3");
+	}
+
+	@Test
 	public void testDropWhile() {
 		// given
 		ConsList<Integer> nil = nil();
@@ -113,6 +150,39 @@ public class ConsListTest {
 		assertThat(actual.trace()).isEqualTo("");
 		assertThat(actual0.trace()).isEqualTo("");
 		assertThat(actual1.trace()).isEqualTo("2.3");
+	}
+
+	@Test
+	public void testConcat() {
+		// given
+		ConsList<Integer> left = cons(0, cons(1, cons(2, cons(3, nil()))));
+		ConsList<Integer> right = cons(4, cons(5, cons(6, nil())));
+		// when
+		ConsList<Integer> actual = left.concat(right);
+		// then
+		assertThat(actual.trace()).isEqualTo("0.1.2.3.4.5.6");
+	}
+
+	@Test
+	public void testFlatten() {
+		// given
+		ConsList<Integer> left = cons(0, cons(1, cons(2, cons(3, nil()))));
+		ConsList<Integer> right = cons(4, cons(5, cons(6, nil())));
+		// when
+		ConsList<Integer> actual = left.concat(right);
+		// then
+		assertThat(actual.trace()).isEqualTo("0.1.2.3.4.5.6");
+	}
+
+	@Test
+	public void testFlatMap() {
+		// given
+		ConsList<Integer> left = cons(0, cons(1, cons(2, cons(3, nil()))));
+		Function<Integer, ConsList<String>> f = n -> iterate(n.toString(), x -> x).take(n);
+		// when
+		ConsList<String> actual = left.flatMap(f);
+		// then
+		assertThat(actual.trace()).isEqualTo("1.2.2.3.3.3");
 	}
 
 }

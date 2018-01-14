@@ -1,7 +1,7 @@
 package com.sandbox.funcprog.stream;
 
 import static com.sandbox.funcprog.bifunctor.Prod.prod;
-import static com.sandbox.funcprog.stream.Anamorphism.unfold;
+import static com.sandbox.funcprog.stream.Anamorphism.from;
 import static com.sandbox.funcprog.tailrecursion.Bouncer.resume;
 import static com.sandbox.funcprog.tailrecursion.Bouncer.suspend;
 import static java.util.Optional.empty;
@@ -36,6 +36,14 @@ public class ConsList<A> {
 		return values.map(Supplier::get);
 	}
 
+	private Boolean isNotEmpty() {
+		return out().isPresent();
+	}
+
+	private Optional<ConsList<A>> nonEmptyList() {
+		return of(this).filter(ConsList::isNotEmpty);
+	}
+
 	public <B> B foldLeft(B id, BiFunction<B, A, B> biFunction) {
 		return bounceFoldLeft(this, id, biFunction).call();
 	}
@@ -52,8 +60,16 @@ public class ConsList<A> {
 		return out().map(Prod::left);
 	}
 
+	public A hd() {
+		return head().get();
+	}
+
 	public Optional<ConsList<A>> tail() {
 		return out().map(Prod::right);
+	}
+
+	public ConsList<A> tl() {
+		return tail().get();
 	}
 
 	public String trace() {
@@ -65,11 +81,11 @@ public class ConsList<A> {
 	}
 
 	public <B> ConsList<B> map(Function<A, B> f) {
-		return unfold(subMap(f)).apply(this);
+		return new Anamorphism<>(subMap(f)).unfold(this);
 	}
 
 	private static <X, Y> Function<ConsList<X>, Optional<Prod<Y, ConsList<X>>>> subMap(Function<X, Y> f) {
-		return xs -> xs.out().map(prod -> prod.mapLeft(f));
+		return xs -> xs.out().map(prd -> prd.mapLeft(f));
 	}
 
 	public <B> B foldRight(B id, BiFunction<A, B, B> biFunction) {
@@ -77,11 +93,29 @@ public class ConsList<A> {
 	}
 
 	public ConsList<A> takeWhile(Predicate<A> p) {
-		return apply((a, as) -> of(a).filter(p).map(x -> cons(() -> x, () -> as.takeWhile(p))).orElse(nil()));
+		return new Anamorphism<>(filteredOut(p)).unfold(this);
 	}
 
-	private <B> ConsList<B> apply(BiFunction<A, ConsList<A>, ConsList<B>> biFunction) {
-		return apply(this, nil(), biFunction);
+	public <B> ConsList<Prod<A, B>> zip(ConsList<B> list) {
+		return new Anamorphism<Prod<ConsList<A>, ConsList<B>>, Prod<A, B>>(
+				prd -> prd.apply((as, bs) -> as.optSubzip(bs))).unfold(prod(this, list));
+	}
+
+	private <B> Optional<Prod<Prod<A, B>, Prod<ConsList<A>, ConsList<B>>>> optSubzip(ConsList<B> ys) {
+		return ys.nonEmptyList().flatMap(bs -> nonEmptyList().map(as -> as.subzip(bs)));
+
+	}
+
+	private <B> Prod<Prod<A, B>, Prod<ConsList<A>, ConsList<B>>> subzip(ConsList<B> ys) {
+		return prod(prod(this.hd(), ys.hd()), prod(this.tl(), ys.tl()));
+	}
+
+	private static <X> Function<ConsList<X>, Optional<Prod<X, ConsList<X>>>> filteredOut(Predicate<X> p) {
+		return xs -> xs.out().filter(pair -> pair.apply((a, as) -> p.test(a)));
+	}
+
+	public ConsList<A> take(final Integer nbElementsToKeep) {
+		return zip(from(0)).takeWhile(prd -> prd.apply((a, n) -> n < nbElementsToKeep)).map(Prod::left);
 	}
 
 	public ConsList<A> dropWhile(Predicate<A> predicate) {
@@ -90,6 +124,22 @@ public class ConsList<A> {
 
 	private static <X> Bouncer<ConsList<X>> dropWhile(ConsList<X> acc, Predicate<X> p) {
 		return apply(acc, resume(acc), (hd, tl) -> p.test(hd) ? suspend(() -> dropWhile(tl, p)) : resume(acc));
+	}
+
+	public ConsList<A> concat(ConsList<A> right) {
+		return this.foldRight(right, ConsList::cons);
+	}
+
+	private static <X> ConsList<X> cons(X x, ConsList<X> xs) {
+		return cons(() -> x, () -> xs);
+	}
+
+	public static <X> ConsList<X> flatten(ConsList<ConsList<X>> listOfLists) {
+		return listOfLists.foldLeft(nil(), (left, right) -> left.concat(right));
+	}
+
+	public <B> ConsList<B> flatMap(Function<A, ConsList<B>> f) {
+		return flatten(foldRight(nil(), (a, bs) -> cons(f.apply(a), bs)));
 	}
 
 }

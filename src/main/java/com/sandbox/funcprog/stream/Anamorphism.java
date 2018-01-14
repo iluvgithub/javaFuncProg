@@ -11,21 +11,32 @@ import java.util.function.UnaryOperator;
 
 import com.sandbox.funcprog.bifunctor.Prod;
 
-public class Anamorphism {
+/**
+ *
+ * @param <S>
+ *            state
+ * @param <X>
+ *            output will be list of type X
+ * 
+ */
+public class Anamorphism<S, X> {
 
-	private Anamorphism() {
+	private final Function<S, Optional<Prod<X, S>>> generation;
+
+	public Anamorphism(Function<S, Optional<Prod<X, S>>> generation) {
+		this.generation = generation;
 	}
 
-	public static <S, X> Function<S, ConsList<X>> unfold(Predicate<S> stoppingCondition, Function<S, Prod<X, S>> g) {
-		return unfold(s0 -> of(s0).filter(stoppingCondition.negate()).map(g));
+	public Anamorphism(Predicate<S> stoppingCondition, Function<S, Prod<X, S>> g) {
+		this(s0 -> of(s0).filter(stoppingCondition.negate()).map(g));
 	}
 
-	public static <S, X> Function<S, ConsList<X>> unfold(Function<S, Optional<Prod<X, S>>> g) {
-		return g.andThen(opt -> opt.map(unfoldStep(g)).orElse(nil()));
+	public ConsList<X> unfold(S s) {
+		return generation.andThen(opt -> opt.map(unfoldStep()).orElse(nil())).apply(s);
 	}
 
-	private static <S, X> Function<Prod<X, S>, ConsList<X>> unfoldStep(Function<S, Optional<Prod<X, S>>> g) {
-		return prod -> prod.apply((x, s) -> cons(() -> x, () -> unfold(g).apply(s)));
+	private Function<Prod<X, S>, ConsList<X>> unfoldStep() {
+		return prod -> prod.apply((x, s) -> cons(() -> x, () -> unfold(s)));
 	}
 
 	private static <X> ConsList<X> nil() {
@@ -45,7 +56,7 @@ public class Anamorphism {
 	}
 
 	public static <Z> ConsList<Z> iterate(Z from, UnaryOperator<Z> op) {
-		return unfold(z -> false, iterateStep(op)).apply(from);
+		return new Anamorphism<>(z -> false, iterateStep(op)).unfold(from);
 	}
 
 	private static <Z> Function<Z, Prod<Z, Z>> iterateStep(UnaryOperator<Z> op) {
