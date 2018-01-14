@@ -54,10 +54,6 @@ public class ConsList<A> {
 		return apply(list, resume(out), (hd, tl) -> suspend(() -> bounceFoldLeft(tl, bi.apply(out, hd), bi)));
 	}
 
-	private <V> V outApply(V cumulated, BiFunction<A, ConsList<A>, V> biFunction) {
-		return apply(this, cumulated, biFunction);
-	}
-
 	private static <U, V> V apply(ConsList<U> list, V cumulated, BiFunction<U, ConsList<U>, V> biFunction) {
 		return list.out().map(headTail -> headTail.apply(biFunction)).orElse(cumulated);
 	}
@@ -148,13 +144,17 @@ public class ConsList<A> {
 	}
 
 	public ConsList<A> sort(Comparator<A> comp) {
-		return ConsList.<A, ConsList<A>>apply(this, nil(),
-				(hd, tl) -> subSort(comp).apply(hd, tl).apply((l, r) -> l.concat(prepend(hd).apply(r))));
+		return apply(this, nil(),
+				(hd, tl) -> buildTree(comp).apply(hd, tl).apply((l, r) -> l.concat(prepend(hd).apply(r))));
 	}
 
-	private static <X> BiFunction<X, ConsList<X>, Prod<ConsList<X>, ConsList<X>>> subSort(Comparator<X> comp) {
-		return (x0, tl) -> tl.foldLeft(prod(nil(), nil()),
-				(prd, x) -> comp.compare(x0, x) < 0 ? prd.mapRight(prepend(x)) : prd.mapLeft(prepend(x)));
+	private static <X> BiFunction<X, ConsList<X>, Prod<ConsList<X>, ConsList<X>>> buildTree(Comparator<X> comp) {
+		return (x0, tl) -> tl.foldLeft(prod(nil(), nil()), subSort(comp, x0));
+	}
+
+	private static <X> BiFunction<Prod<ConsList<X>, ConsList<X>>, X, Prod<ConsList<X>, ConsList<X>>> subSort(
+			Comparator<X> comp, X x0) {
+		return (prd, x) -> comp.compare(x0, x) < 0 ? prd.mapRight(prepend(x)) : prd.mapLeft(prepend(x));
 	}
 
 	private static <X> UnaryOperator<ConsList<X>> prepend(X x) {
