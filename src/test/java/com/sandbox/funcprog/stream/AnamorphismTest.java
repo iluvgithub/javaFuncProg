@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import com.sandbox.funcprog.bifunctor.Prod;
 
-public class AnamorphismTest {
+public class AnamorphismTest { 
 
 	@Test
 	public void testGenerate() {
@@ -55,4 +55,6 @@ public class AnamorphismTest {
 		// then
 		assertThat(actual).isEqualTo("0.1.2");
 	}
+	
+	
 }

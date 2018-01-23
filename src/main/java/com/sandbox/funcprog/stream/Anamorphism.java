@@ -19,7 +19,7 @@ import com.sandbox.funcprog.bifunctor.Prod;
  *            output will be list of type X
  * 
  */
-public class Anamorphism<S, X> {
+public class Anamorphism<S, X> { 
 
 	private final Function<S, Optional<Prod<X, S>>> generation;
 
@@ -27,8 +27,8 @@ public class Anamorphism<S, X> {
 		this.generation = generation;
 	}
 
-	public Anamorphism(Predicate<S> stoppingCondition, Function<S, Prod<X, S>> g) {
-		this(s0 -> of(s0).filter(stoppingCondition.negate()).map(g));
+	public Anamorphism(Predicate<S> stop, Function<S, Prod<X, S>> g) {
+		this(s0 -> of(s0).filter(stop.negate()).map(g));
 	}
 
 	public ConsList<X> unfold(S s) {

@@ -1,5 +1,7 @@
 package com.sandbox.funcprog.stream;
 
+import static com.sandbox.funcprog.bifunctor.Prod.makeApply;
+import static com.sandbox.funcprog.bifunctor.Prod.makePredicate;
 import static com.sandbox.funcprog.bifunctor.Prod.prod;
 import static com.sandbox.funcprog.stream.Anamorphism.from;
 import static com.sandbox.funcprog.tailrecursion.Bouncer.resume;
@@ -99,8 +101,8 @@ public class ConsList<A> {
 	}
 
 	public <B> ConsList<Prod<A, B>> zip(ConsList<B> list) {
-		return new Anamorphism<Prod<ConsList<A>, ConsList<B>>, Prod<A, B>>(
-				prd -> prd.apply((as, bs) -> as.optSubzip(bs))).unfold(prod(this, list));
+		return new Anamorphism<Prod<ConsList<A>, ConsList<B>>, Prod<A, B>>(makeApply((as, bs) -> as.optSubzip(bs)))
+				.unfold(prod(this, list));
 	}
 
 	private <B> Optional<Prod<Prod<A, B>, Prod<ConsList<A>, ConsList<B>>>> optSubzip(ConsList<B> ys) {
@@ -112,11 +114,11 @@ public class ConsList<A> {
 	}
 
 	private static <X> Function<ConsList<X>, Optional<Prod<X, ConsList<X>>>> filteredOut(Predicate<X> p) {
-		return xs -> xs.out().filter(pair -> pair.apply((a, as) -> p.test(a)));
+		return xs -> xs.out().filter(makePredicate((a, as) -> p.test(a)));
 	}
 
 	public ConsList<A> take(final Integer nbElementsToKeep) {
-		return zip(from(0)).takeWhile(prd -> prd.apply((a, n) -> n < nbElementsToKeep)).map(Prod::left);
+		return zip(from(0)).takeWhile(makePredicate((a, n) -> n < nbElementsToKeep)).map(Prod::left);
 	}
 
 	public ConsList<A> dropWhile(Predicate<A> predicate) {

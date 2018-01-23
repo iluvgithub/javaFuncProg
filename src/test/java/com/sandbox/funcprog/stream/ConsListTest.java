@@ -34,7 +34,7 @@ public class ConsListTest {
 		// then
 		assertThat(actual0).isEqualTo("e");
 		assertThat(actual).isEqualTo("e.0.1.2");
-	}
+	} 
 
 	@Test
 	public void testTrace() {
@@ -194,7 +194,7 @@ public class ConsListTest {
 		// when
 		ConsList<Integer> actuals = list.sort(comp);
 		// then
-		assertThat(actuals.trace()).isEqualTo("0.1.2");
+		assertThat(actuals.trace()).isEqualTo("0.1.2"); 
 	}
  
 

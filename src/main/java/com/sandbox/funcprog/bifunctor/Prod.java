@@ -2,6 +2,7 @@ package com.sandbox.funcprog.bifunctor;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * 
@@ -15,7 +16,7 @@ public class Prod<LEFT, RIGHT> {
 	private final LEFT l;
 	private final RIGHT r;
 
-	protected Prod(LEFT l, RIGHT r) {
+	protected Prod(LEFT l, RIGHT r) { 
 		super();
 		this.l = l;
 		this.r = r;
@@ -48,4 +49,14 @@ public class Prod<LEFT, RIGHT> {
 	public <Z> Z apply(BiFunction<LEFT, RIGHT, Z> bi) {
 		return bi.apply(left(), right());
 	}
+
+	public static <L, R, Z> Function<Prod<L, R>, Z> makeApply(BiFunction<L, R, Z> bi) {
+		return pair -> pair.apply(bi);
+	}
+
+	public static <L, R> Predicate<Prod<L, R>> makePredicate(BiFunction<L, R, Boolean> bi) {
+		return pair-> makeApply(bi).apply(pair);
+	}
+	
 }
+
