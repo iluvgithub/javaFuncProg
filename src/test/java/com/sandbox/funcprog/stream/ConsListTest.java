@@ -196,5 +196,6 @@ public class ConsListTest {
 		// then
 		assertThat(actuals.trace()).isEqualTo("0.1.2");
 	}
+ 
 
 }
