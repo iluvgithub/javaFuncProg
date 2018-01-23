@@ -3,6 +3,7 @@ package com.sandbox.funcprog.stream;
 import static com.sandbox.funcprog.bifunctor.Prod.prod;
 import static com.sandbox.funcprog.stream.Anamorphism.from;
 import static com.sandbox.funcprog.stream.Anamorphism.fromTo;
+import static com.sandbox.funcprog.stream.ConsList.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.function.Function;
@@ -71,5 +72,6 @@ public class AnamorphismTest {
 		// then
 		assertThat(actual).isEqualTo("0.1.2");
 	}
+
 
 }

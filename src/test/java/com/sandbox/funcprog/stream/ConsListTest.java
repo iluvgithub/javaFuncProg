@@ -2,6 +2,7 @@ package com.sandbox.funcprog.stream;
 
 import static com.sandbox.funcprog.bifunctor.Prod.prod;
 import static com.sandbox.funcprog.stream.Anamorphism.iterate;
+import static com.sandbox.funcprog.stream.ConsList.fromArray;
 import static com.sandbox.funcprog.stream.ConsList.unzip;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -160,6 +161,16 @@ public class ConsListTest {
 		assertThat(actual.trace()).isEqualTo("");
 		assertThat(actual1.trace()).isEqualTo("0.1.2");
 		assertThat(actual2.trace()).isEqualTo("0.1.2.3");
+	}
+
+	@Test
+	public void testFromArray() {
+		// given
+		ConsList<Integer> list = fromArray(0, 3, 1, 2);
+		// when
+		String actual = list.trace();
+		// then
+		assertThat(actual).isEqualTo("0.3.1.2");
 	}
 
 	@Test

@@ -175,4 +175,9 @@ public class ConsList<A> {
 		return xs -> cons(x, xs);
 	}
 
+	@SafeVarargs
+	public static <X> ConsList<X> fromArray(X... xs) {
+		return new Anamorphism<Integer, X>(i -> i == 0, i -> prod(xs[xs.length - i], i - 1)).unfold(xs.length);
+	}
+
 }
