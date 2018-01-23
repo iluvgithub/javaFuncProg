@@ -20,12 +20,12 @@ public class PrimeDecomposer {
 				.unfold(prod(2, n)));
 	}
 
-	private static Prod<ConsList<Integer>, Prod<Integer, Integer>> step(Integer d, Integer n) {
-		return new Anamorphism<>(isNotDivisible(d), divide(d)).unfoldWithState(n).mapRight(prodFromRight(d + 1));
-	}
-
 	private static Boolean isOver(Integer d, Integer n) {
 		return n == 1;
+	}
+
+	private static Prod<ConsList<Integer>, Prod<Integer, Integer>> step(Integer d, Integer n) {
+		return new Anamorphism<>(isNotDivisible(d), divide(d)).unfoldWithState(n).mapRight(prodFromRight(d + 1));
 	}
 
 	private static Predicate<Integer> isNotDivisible(Integer d) {
