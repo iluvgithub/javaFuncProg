@@ -1,9 +1,12 @@
 package com.sandbox.funcprog.stream;
 
+import static com.sandbox.funcprog.bifunctor.Prod.prod;
 import static com.sandbox.funcprog.stream.Anamorphism.iterate;
+import static com.sandbox.funcprog.stream.ConsList.unzip;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -34,7 +37,7 @@ public class ConsListTest {
 		// then
 		assertThat(actual0).isEqualTo("e");
 		assertThat(actual).isEqualTo("e.0.1.2");
-	} 
+	}
 
 	@Test
 	public void testTrace() {
@@ -121,6 +124,29 @@ public class ConsListTest {
 	}
 
 	@Test
+	public void testUnzip() {
+		// given
+		ConsList<Prod<Integer, String>> list = cons(prod(1, "a"), cons(prod(2, "b"), cons(prod(3, "c"), nil())));
+		// when
+		Prod<ConsList<Integer>, ConsList<String>> actuals = unzip(list);
+		// then
+		assertThat(actuals.left().trace()).isEqualTo("1.2.3");
+		assertThat(actuals.right().trace()).isEqualTo("a.b.c");
+	}
+
+	@Test
+	public void testLast() {
+		// given
+		ConsList<Integer> ints = cons(1, cons(2, cons(3, nil())));
+		// when
+		Optional<Integer> actual = ints.last();
+		// then
+		assertThat(actual.isPresent()).isTrue();
+		assertThat(actual.get()).isEqualTo(3);
+		assertThat(nil().last().isPresent()).isFalse();
+	}
+
+	@Test
 	public void testTakeN() {
 		// given
 		ConsList<Integer> nil = nil();
@@ -194,8 +220,7 @@ public class ConsListTest {
 		// when
 		ConsList<Integer> actuals = list.sort(comp);
 		// then
-		assertThat(actuals.trace()).isEqualTo("0.1.2"); 
+		assertThat(actuals.trace()).isEqualTo("0.1.2");
 	}
- 
 
 }

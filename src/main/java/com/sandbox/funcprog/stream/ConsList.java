@@ -84,6 +84,10 @@ public class ConsList<A> {
 		return foldLeft(nil(), (list, a) -> cons(() -> a, () -> list));
 	}
 
+	public Optional<A> last() {
+		return reverse().head();
+	}
+
 	public <B> ConsList<B> map(Function<A, B> f) {
 		return new Anamorphism<>(subMap(f)).unfold(this);
 	}
@@ -111,6 +115,14 @@ public class ConsList<A> {
 
 	private <B> Prod<Prod<A, B>, Prod<ConsList<A>, ConsList<B>>> subzip(ConsList<B> ys) {
 		return prod(prod(this.hd(), ys.hd()), prod(this.tl(), ys.tl()));
+	}
+
+	public static <L, R> Prod<ConsList<L>, ConsList<R>> unzip(ConsList<Prod<L, R>> prods) {
+		return prods.foldRight(prod(nil(), nil()), ConsList::subUnzip);
+	}
+
+	private static <L, R> Prod<ConsList<L>, ConsList<R>> subUnzip(Prod<L, R> lr, Prod<ConsList<L>, ConsList<R>> prod) {
+		return lr.map(l -> cons(() -> l, () -> prod.left()), r -> cons(() -> r, () -> prod.right()));
 	}
 
 	private static <X> Function<ConsList<X>, Optional<Prod<X, ConsList<X>>>> filteredOut(Predicate<X> p) {

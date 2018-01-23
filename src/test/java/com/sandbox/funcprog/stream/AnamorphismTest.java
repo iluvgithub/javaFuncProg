@@ -15,7 +15,7 @@ import com.sandbox.funcprog.bifunctor.Prod;
 public class AnamorphismTest {
 
 	@Test
-	public void testAnamorphism() {
+	public void testUnfold() {
 		// given
 		Predicate<Integer> p = n -> n == 0;
 		Function<Integer, Prod<String, Integer>> g = n -> prod(n.toString(), n - 1);
@@ -23,6 +23,21 @@ public class AnamorphismTest {
 		ConsList<String> actual = new Anamorphism<>(p, g).unfold(3);
 		// then
 		assertThat(actual.trace()).isEqualTo("3.2.1");
+	}
+
+	@Test
+	public void testUnfoldWithState() {
+		// given
+		Predicate<Integer> p = n -> n == 0;
+		Function<Integer, Prod<String, Integer>> g = n -> prod("U" + n, n - 1);
+		// when
+		Prod<ConsList<String>, Integer> actual = new Anamorphism<>(p, g).unfoldWithState(3);
+		Prod<ConsList<String>, Integer> actual0 = new Anamorphism<>(p, g).unfoldWithState(0);
+		// then
+		assertThat(actual.left().trace()).isEqualTo("U3.U2.U1");
+		assertThat(actual.right()).isEqualTo(0);
+		assertThat(actual0.left().trace()).isEqualTo("");
+		assertThat(actual0.right()).isEqualTo(0);
 	}
 
 	@Test

@@ -1,6 +1,8 @@
 package com.sandbox.funcprog.stream;
 
+import static com.sandbox.funcprog.bifunctor.Prod.makeApply;
 import static com.sandbox.funcprog.bifunctor.Prod.prod;
+import static com.sandbox.funcprog.stream.ConsList.unzip;
 import static java.util.Optional.of;
 
 import java.util.Optional;
@@ -19,7 +21,7 @@ import com.sandbox.funcprog.bifunctor.Prod;
  *            output will be list of type X
  * 
  */
-public class Anamorphism<S, X> { 
+public class Anamorphism<S, X> {
 
 	private final Function<S, Optional<Prod<X, S>>> generation;
 
@@ -27,6 +29,13 @@ public class Anamorphism<S, X> {
 		this.generation = generation;
 	}
 
+	/**
+	 * 
+	 * @param stop
+	 *            stopping condition
+	 * @param g
+	 *            one step function
+	 */
 	public Anamorphism(Predicate<S> stop, Function<S, Prod<X, S>> g) {
 		this(s0 -> of(s0).filter(stop.negate()).map(g));
 	}
@@ -45,6 +54,14 @@ public class Anamorphism<S, X> {
 
 	private static <X> ConsList<X> cons(Supplier<X> x, Supplier<ConsList<X>> xs) {
 		return ConsList.cons(x, xs);
+	}
+
+	public Prod<ConsList<X>, S> unfoldWithState(S s0) {
+		return unzip(withState().unfold(s0)).mapRight(ConsList::last).mapRight(optS -> optS.orElse(s0));
+	}
+
+	private Anamorphism<S, Prod<X, S>> withState() {
+		return new Anamorphism<>(s -> generation.apply(s).map(makeApply((x, z) -> prod(prod(x, z), z))));
 	}
 
 	public static ConsList<Integer> from(Integer n) {
