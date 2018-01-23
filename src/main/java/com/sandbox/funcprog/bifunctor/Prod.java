@@ -16,7 +16,7 @@ public class Prod<LEFT, RIGHT> {
 	private final LEFT l;
 	private final RIGHT r;
 
-	protected Prod(LEFT l, RIGHT r) { 
+	protected Prod(LEFT l, RIGHT r) {
 		super();
 		this.l = l;
 		this.r = r;
@@ -24,6 +24,14 @@ public class Prod<LEFT, RIGHT> {
 
 	public static <L, R> Prod<L, R> prod(L l, R r) {
 		return new Prod<>(l, r);
+	}
+
+	public static <L, R> Function<R, Prod<L, R>> prodFromRight(L l) {
+		return r -> prod(l, r);
+	}
+
+	public static <L, R> Function<L, Prod<L, R>> prodFromLeft(R r) {
+		return l -> prod(l, r);
 	}
 
 	public LEFT left() {
@@ -55,8 +63,7 @@ public class Prod<LEFT, RIGHT> {
 	}
 
 	public static <L, R> Predicate<Prod<L, R>> makePredicate(BiFunction<L, R, Boolean> bi) {
-		return pair-> makeApply(bi).apply(pair);
+		return pair -> makeApply(bi).apply(pair);
 	}
-	
-}
 
+}

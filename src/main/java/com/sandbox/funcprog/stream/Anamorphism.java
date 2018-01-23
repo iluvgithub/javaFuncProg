@@ -21,20 +21,17 @@ import com.sandbox.funcprog.bifunctor.Prod;
  *            output will be list of type X
  * 
  */
-public class Anamorphism<S, X> {
+public class Anamorphism<S, X> { 
 
-	private final Function<S, Optional<Prod<X, S>>> generation;
+	private final Function<S, Optional<Prod<X, S>>> generation; 
 
 	public Anamorphism(Function<S, Optional<Prod<X, S>>> generation) {
 		this.generation = generation;
 	}
 
-	/**
-	 * 
-	 * @param stop
-	 *            stopping condition
-	 * @param g
-	 *            one step function
+	/** 
+	 * @param stop stopping condition
+	 * @param g one step function
 	 */
 	public Anamorphism(Predicate<S> stop, Function<S, Prod<X, S>> g) {
 		this(s0 -> of(s0).filter(stop.negate()).map(g));
