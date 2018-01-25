@@ -153,6 +153,10 @@ public class ConsList<A> {
 		return listOfLists.foldLeft(nil(), (left, right) -> left.concat(right));
 	}
 
+	public ConsList<A> filter(Predicate<A> p) {
+		return foldRight(nil(), (a, as) -> of(a).filter(p).map(x -> cons(() -> x, () -> as)).orElse(as));
+	}
+
 	public <B> ConsList<B> flatMap(Function<A, ConsList<B>> f) {
 		return flatten(foldRight(nil(), (a, bs) -> cons(f.apply(a), bs)));
 	}

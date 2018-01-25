@@ -213,6 +213,16 @@ public class ConsListTest {
 	}
 
 	@Test
+	public void testFilter() {
+		// given
+		ConsList<Integer> list = cons(0, cons(1, cons(2, cons(3, cons(4, cons(5, cons(6, nil())))))));
+		// when
+		ConsList<Integer> actual = list.filter(x -> x % 2 == 0);
+		// then
+		assertThat(actual.trace()).isEqualTo("0.2.4.6");
+	}
+
+	@Test
 	public void testFlatMap() {
 		// given
 		ConsList<Integer> left = cons(0, cons(1, cons(2, cons(3, nil()))));
