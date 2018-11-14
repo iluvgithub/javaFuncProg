@@ -44,7 +44,7 @@ public class HelloWorldServlet extends HttpServlet {
 				"</head>" + //
 				"<body>" + //
 				"<h1>" + //
-				"Hello New World" + //
+				"Hello world" + //
 				"</h1>" + //
 				"</body>" + //
 				"</html>";
