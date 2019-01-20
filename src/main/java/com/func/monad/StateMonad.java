@@ -1,6 +1,7 @@
 package com.func.monad;
 
 import static com.func.Curry.uncurry;
+import static com.func.vacuum.None.NONE;
 
 import java.util.function.Function;
 
@@ -31,6 +32,6 @@ public interface StateMonad<STATE, A> extends Function<STATE, Prod<STATE, A>> {
 	}
 
 	public static <S> Function<S, StateMonad<S, None>> put() {
-		return s -> s0 -> Prod.prod(s, None.NONE);
+		return s -> s0 -> Prod.prod(s, NONE);
 	}
 }
