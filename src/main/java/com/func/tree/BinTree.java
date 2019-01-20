@@ -17,7 +17,7 @@ import com.func.Plus;
 import com.func.Prod;
 import com.func.sequence.Sequence;
 import com.func.tailrec.Bouncer;
-import com.func.vacuum.Vacuum;
+import com.func.vacuum.None;
 
 /**
  * 
@@ -62,7 +62,7 @@ public class BinTree<A> {
 
 	// https://stackoverflow.com/questions/41440313/tail-recursive-fold-on-a-binary-tree-in-scala
 	private <X, Z> Bouncer<Sequence<Z>> bounceFold(Z z, Function<X, Z> f, BinaryOperator<Z> op, //
-			Sequence<Plus<BinTree<X>, Vacuum>> toVisit, Sequence<Z> acc) {
+			Sequence<Plus<BinTree<X>, None>> toVisit, Sequence<Z> acc) {
 
 		if (toVisit.isEmpty()) {
 			return done(acc);
@@ -76,10 +76,10 @@ public class BinTree<A> {
 			Function<Prod<BinTree<X>, BinTree<X>>, Bouncer<Sequence<Z>>> b = prd -> {// branch
 				BinTree<X> l = prd.left();
 				BinTree<X> r = prd.right();
-				Sequence<Plus<BinTree<X>, Vacuum>> in0 = //
+				Sequence<Plus<BinTree<X>, None>> in0 = //
 						cons(inLeft(r), //
 								cons(inLeft(l), //
-										cons(inRight(Vacuum.INSTANCE), toVisit.tail().get())));
+										cons(inRight(None.INSTANCE), toVisit.tail().get())));
 				return () -> bounceFold(z, f, op, in0, acc);
 			};
 			return Plus.fold(a, b).apply(bt.getValues().//
@@ -89,7 +89,7 @@ public class BinTree<A> {
 			);
 		};
 
-		Function<Vacuum, Bouncer<Sequence<Z>>> bar = v -> { // branchStub
+		Function<None, Bouncer<Sequence<Z>>> bar = v -> { // branchStub
 			Z l = acc.head().get();
 			Z r = acc.tail().get().head().get();
 			Sequence<Z> acc0 = cons(op.apply(l, r), acc.tail().get().tail().get());

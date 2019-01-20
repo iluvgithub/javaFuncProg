@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import com.func.Prod;
 import com.func.sequence.Sequence;
-import com.func.vacuum.Vacuum;
+import com.func.vacuum.None;
 
 public class BasicStringParserTest {
 
@@ -84,10 +84,10 @@ public class BasicStringParserTest {
 	@Test
 	public void testChr() {
 		// given
-		StringParser<Vacuum> chr = chr('b');
+		StringParser<None> chr = chr('b');
 		// when
-		Optional<Vacuum> actual0 = chr.parse("a");
-		Optional<Vacuum> actual1 = chr.parse("b");
+		Optional<None> actual0 = chr.parse("a");
+		Optional<None> actual1 = chr.parse("b");
 		// then
 		assertThat(actual0.isPresent()).isFalse();
 		assertThat(actual1.isPresent()).isTrue();
@@ -96,10 +96,10 @@ public class BasicStringParserTest {
 	@Test
 	public void testFlatMap() {
 		// given
-		StringParser<Vacuum> x = chr('a');
-		StringParser<Vacuum> y = chr('b');
+		StringParser<None> x = chr('a');
+		StringParser<None> y = chr('b');
 		// when
-		StringParser<Vacuum> z = x.flatMap(c -> y);
+		StringParser<None> z = x.flatMap(c -> y);
 		// then
 		assertThat(z.parse("ab").isPresent()).isTrue();
 	}
@@ -109,13 +109,13 @@ public class BasicStringParserTest {
 		// given
 		int n = 20;
 		String s = "";
-		StringParser<Vacuum> x = ofVoid();
+		StringParser<None> x = ofVoid();
 		for (int i = 0; i < n; ++i) {
 			s += "a";
 			x = x.flatMap(v -> chr('a'));
 		}
 		// when
-		Optional<Vacuum> actual = x.parse(s);
+		Optional<None> actual = x.parse(s);
 		// then
 		assertThat(actual.isPresent()).isTrue();
 	}
@@ -124,12 +124,12 @@ public class BasicStringParserTest {
 	public void testOrMass() {
 		// given
 		int n = 2;
-		StringParser<Vacuum> x = ofVoid();
+		StringParser<None> x = ofVoid();
 		for (int i = 0; i < n; ++i) {
 			x = x.or(x);
 		}
 		// when
-		Optional<Vacuum> actual = x.parse("");
+		Optional<None> actual = x.parse("");
 		// then
 		assertThat(actual.isPresent()).isTrue();
 	}
@@ -137,12 +137,12 @@ public class BasicStringParserTest {
 	@Test
 	public void testStr() {
 		// given
-		StringParser<Vacuum> str = str("abc");
+		StringParser<None> str = str("abc");
 		// when
-		Optional<Vacuum> actual = str.parse("abcd");
-		Optional<Vacuum> actual0 = str.parse("abc");
-		Optional<Vacuum> actual1 = str.parse("bc");
-		Optional<Vacuum> actual2 = str.parse("ab");
+		Optional<None> actual = str.parse("abcd");
+		Optional<None> actual0 = str.parse("abc");
+		Optional<None> actual1 = str.parse("bc");
+		Optional<None> actual2 = str.parse("ab");
 		// then
 		assertThat(actual.isPresent()).isTrue();
 		assertThat(actual0.isPresent()).isTrue();
@@ -155,12 +155,12 @@ public class BasicStringParserTest {
 		// given
 		int n = 2000;// 4000 wrong
 		String s = IntStream.range(0, n).mapToObj(i -> "a").collect(joining(""));
-		StringParser<Vacuum> str = str(s);
+		StringParser<None> str = str(s);
 		// when
-		Optional<Vacuum> actual = str.parse(s + "b");
-		Optional<Vacuum> actual0 = str.parse(s);
-		Optional<Vacuum> actual1 = str.parse("b");
-		Optional<Vacuum> actual2 = str.parse("b" + s);
+		Optional<None> actual = str.parse(s + "b");
+		Optional<None> actual0 = str.parse(s);
+		Optional<None> actual1 = str.parse("b");
+		Optional<None> actual2 = str.parse("b" + s);
 		// then
 		assertThat(actual.isPresent()).isTrue();
 		assertThat(actual0.isPresent()).isTrue();
@@ -254,10 +254,10 @@ public class BasicStringParserTest {
 	@Test
 	public void testSpace() {
 		// given
-		StringParser<Vacuum> space = space();
+		StringParser<None> space = space();
 		// when
-		Optional<Vacuum> act0 = space.parse(" ");
-		Optional<Vacuum> act1 = space.parse("  ");
+		Optional<None> act0 = space.parse(" ");
+		Optional<None> act1 = space.parse("  ");
 		Optional<Integer> act2 = space.flatMap(x -> digits()).parse(" 123");
 		Optional<Integer> act3 = digits().parse(" 123");
 

@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 
 import com.func.Prod;
 import com.func.sequence.Sequence;
-import com.func.vacuum.Vacuum;
+import com.func.vacuum.None;
 
 public class BasicStringParsers {
 	private static final Predicate<String> NON_EMPTY = s -> s.length() > 0;
@@ -25,8 +25,8 @@ public class BasicStringParsers {
 				map(x -> prod(x.charAt(0), x.substring(1)));
 	}
 
-	public static StringParser<Vacuum> ofVoid() {
-		return StringParser.of(Vacuum.INSTANCE);
+	public static StringParser<None> ofVoid() {
+		return StringParser.of(None.INSTANCE);
 	}
 
 	public static <X> StringParser<X> fail() {
@@ -41,17 +41,17 @@ public class BasicStringParsers {
 		);
 	}
 
-	public static StringParser<Vacuum> guard(Boolean b) {
+	public static StringParser<None> guard(Boolean b) {
 		return Optional.of(ofVoid()).//
 				filter(v -> b).//
 				orElse(fail());
 	}
 
-	public static StringParser<Vacuum> chr(Character c) {
+	public static StringParser<None> chr(Character c) {
 		return sat(x -> x == c).flatMap(y -> ofVoid());
 	}
 
-	public static StringParser<Vacuum> str(String s) {
+	public static StringParser<None> str(String s) {
 		return stringToList().apply(s).fold(ofVoid(), //
 				(sp, c) -> sp.flatMap(v -> chr(c))//
 		);
@@ -101,7 +101,7 @@ public class BasicStringParsers {
 				or(StringParser.of(m));
 	}
 
-	public static StringParser<Vacuum> space() {
+	public static StringParser<None> space() {
 		return sat(isSpace()).many().flatMap(x -> ofVoid());
 	}
 
