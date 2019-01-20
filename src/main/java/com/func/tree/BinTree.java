@@ -79,7 +79,7 @@ public class BinTree<A> {
 				Sequence<Plus<BinTree<X>, None>> in0 = //
 						cons(inLeft(r), //
 								cons(inLeft(l), //
-										cons(inRight(None.INSTANCE), toVisit.tail().get())));
+										cons(inRight(None.NONE), toVisit.tail().get())));
 				return () -> bounceFold(z, f, op, in0, acc);
 			};
 			return Plus.fold(a, b).apply(bt.getValues().//

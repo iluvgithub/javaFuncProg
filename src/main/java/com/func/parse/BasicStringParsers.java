@@ -26,7 +26,7 @@ public class BasicStringParsers {
 	}
 
 	public static StringParser<None> ofVoid() {
-		return StringParser.of(None.INSTANCE);
+		return StringParser.of(None.NONE);
 	}
 
 	public static <X> StringParser<X> fail() {
