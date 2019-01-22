@@ -31,7 +31,7 @@ public interface StateMonad<STATE, A> extends Function<STATE, Prod<STATE, A>> {
 		return s -> Prod.prod(s, s);
 	}
 
-	public static <S> Function<S, StateMonad<S, None>> put() {
-		return s -> s0 -> Prod.prod(s, NONE);
+	public static <S> StateMonad<S, None> put(S s) {
+		return s0 -> Prod.prod(s, NONE);
 	}
 }
