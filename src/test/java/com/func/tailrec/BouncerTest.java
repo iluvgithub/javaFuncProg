@@ -1,6 +1,5 @@
 package com.func.tailrec;
 
-import static com.func.tailrec.Bouncer.done;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
@@ -22,11 +21,14 @@ public class BouncerTest {
 	}
 
 	private Bouncer<Integer> sum(Integer n, Integer out) {
-		if (n.equals(0)) {
-			return done(out);
-		} else {
-			return () -> sum(n - 1, out + n);
-		}
+		return Bouncer.hylo(//
+				x -> x == 0, //
+				x -> x - 1, //
+				x -> x, //
+				(z, y) -> z + y, //
+				out, //
+				n //
+		);
 	}
 
 }
