@@ -244,11 +244,30 @@ public class BasicStringParserTest {
 		Optional<Integer> act1 = add.parse("34+66");
 		Optional<Integer> act2 = add.parse("34+66+100");
 		Optional<Integer> act3 = add.parse("34+66+100+");
+		Sequence<Prod<Integer, String>> actuals = add.apply("1+2+3");
 		// then
 		assertThat(act0.get()).isEqualTo(123);
 		assertThat(act1.get()).isEqualTo(100);
 		assertThat(act2.get()).isEqualTo(200);
 		assertThat(act3.get()).isEqualTo(200);
+
+		assertThat(actuals.head().get().left()).isEqualTo(6);
+		assertThat(actuals.head().get().right()).isEqualTo("");
+	}
+
+	@Test
+	public void testAdditionMass() {
+		// given
+		StringParser<Integer> add = addition();
+		int n = 100;
+		String s = "0";
+		for (int i = 0; i < n; ++i) {
+			s += "+1";
+		}
+		// when
+		Optional<Integer> act0 = add.parse(s);
+		// then
+		assertThat(act0.get()).isEqualTo(n);
 	}
 
 	@Test
