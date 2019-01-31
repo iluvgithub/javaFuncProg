@@ -24,7 +24,13 @@ public interface StateMonad<STATE, A> extends Function<STATE, Prod<STATE, A>> {
 	}
 
 	public default <B> StateMonad<STATE, B> flatMap(Function<A, StateMonad<STATE, B>> h) {
-		return fromFunction(this.andThen(Prod.folder(uncurry(h.andThen(StateMonad::asFunction))).compose(Prod::swap)));
+		return fromFunction(//
+				this.andThen(//
+						Prod.folder(uncurry(h.andThen(StateMonad::asFunction))).compose(Prod::swap)
+				//
+				)
+		//
+		);
 	}
 
 	public static <S> StateMonad<S, S> get() {
