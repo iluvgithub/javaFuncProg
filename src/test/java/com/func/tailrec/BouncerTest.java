@@ -9,7 +9,7 @@ public class BouncerTest {
 	@Test
 	public void testSum() {
 		// given
-		int n = 30000;
+		int n = 8000 ;
 		// when
 		Integer actual = sum(n);
 		// then
