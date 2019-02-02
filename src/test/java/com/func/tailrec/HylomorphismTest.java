@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
-public class BouncerTest {
-
+public class HylomorphismTest {
 	@Test
 	public void testSum() {
 		// given
@@ -21,13 +20,13 @@ public class BouncerTest {
 	}
 
 	private Bouncer<Integer> sum(Integer n, Integer out) {
-		if (n == 0) {
-			return Bouncer.done(out);
-
-		} else {
-			return () -> sum(n - 1, out + n);
-		}
-
+		return Hylomorphism.hylo(//
+				x -> x == 0, //
+				x -> x - 1, //
+				x -> x, //
+				(z, y) -> z + y, //
+				out, //
+				n //
+		);
 	}
-
 }
