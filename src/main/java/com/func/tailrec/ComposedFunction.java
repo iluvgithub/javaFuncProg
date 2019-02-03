@@ -12,14 +12,13 @@ public class ComposedFunction<X, Y> implements Function<X, Y> {
 		this.bf = bf;
 	}
 
-	public static <A> Function<A, A> identity() {
+	public static <A> ComposedFunction<A, A> identity() {
 		return new ComposedFunction<>(x -> done(x));
 	}
 
 	@Override
 	public Y apply(X x) {
 		return bf.apply(x).eval();
-
 	}
 
 	@Override

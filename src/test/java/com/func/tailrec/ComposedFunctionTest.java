@@ -24,7 +24,7 @@ public class ComposedFunctionTest {
 	@Test
 	public void testComposeLoop() {
 		// given
-		int n = 8000;
+		int n = 15000;
 		UnaryOperator<Integer> inc = x -> x + 1;
 		Function<Integer, Integer> f = ComposedFunction.identity();
 		for (int i = 0; i < n; ++i) {
@@ -36,4 +36,5 @@ public class ComposedFunctionTest {
 		// then
 		assertThat(act).isEqualTo(n);
 	}
+ 
 }
