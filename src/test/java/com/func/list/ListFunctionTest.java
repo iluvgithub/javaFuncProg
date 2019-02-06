@@ -1,6 +1,7 @@
 package com.func.list;
 
 import static com.func.list.Anamorphism.unfold;
+import static com.func.list.Catamorphism.trace;
 import static com.func.list.List.cons;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,7 +36,7 @@ public class ListFunctionTest {
 		}
 		// act
 		List<Integer> actuals = g.apply(0);
-		String actual = Catamorphism.trace(actuals);
+		String actual = trace(actuals);
 		// assert
 		assertThat(actual).isEqualTo("" + (n + 1));
 	}
