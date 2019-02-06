@@ -7,7 +7,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.func.Prod;
-import com.func.tailrec.Bouncer;
+import com.func.tailrec.Hylomorphism;
 
 public class StreamUtil {
 
@@ -23,7 +23,7 @@ public class StreamUtil {
 	}
 
 	public static <S, A> Function<S, Stream<A>> unfold(Function<S, Optional<Prod<A, S>>> g) {
-		return s -> Bouncer.hylo(g, Stream.<A>builder(), //
+		return s -> Hylomorphism.hylo(g, Stream.<A>builder(), //
 				(bld, a) -> bld.add(a)).//
 				apply(s).build();
 	}
