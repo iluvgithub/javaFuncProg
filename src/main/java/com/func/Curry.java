@@ -38,7 +38,14 @@ public class Curry {
 
 	public static <A, B, Z> Function<B, Z> partialRight(A a, BiFunction<A, B, Z> bif) {
 		return b -> bif.apply(a, b);
+
 	}
+
+	public static <A, B, U, V, Z> BiFunction<A, B, Z> compose(BiFunction<U, V, Z> bif, Function<A, U> f,
+			Function<B, V> g) {
+		return (a, b) -> bif.apply(f.apply(a), g.apply(b));
+	}
+
 	/// Optional Specific
 
 	public static <X, Y> Function<Optional<X>, Optional<Y>> optionalMapper(Function<X, Y> mapper) {
