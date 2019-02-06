@@ -1,5 +1,6 @@
 package com.func.list;
 
+import static com.func.Curry.optionalize;
 import static com.func.Prod.prod;
 import static java.util.function.Function.identity;
 
@@ -21,11 +22,7 @@ public class Anamorphism {
 	}
 
 	public static <S, X> Function<S, List<X>> unfold(Predicate<S> isOver, Function<S, Prod<X, S>> g) {
-		return unfold(convert(isOver, g));
-	}
-
-	protected static <S, X> Function<S, Optional<Prod<X, S>>> convert(Predicate<S> isOver, Function<S, Prod<X, S>> g) {
-		return s -> Optional.of(s).filter(isOver.negate()).map(g);
+		return unfold(optionalize(isOver, g));
 	}
 
 	public static <S, X> Function<S, List<X>> unfold(Function<S, Optional<Prod<X, S>>> g) {

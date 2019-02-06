@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
 public class Curry {
@@ -22,6 +23,10 @@ public class Curry {
 
 	public static <A> BinaryOperator<A> uncurryop(Function<A, Function<A, A>> f) {
 		return asBinaryOperator(uncurry(f));
+	}
+
+	public static <A, B, Z> BiFunction<B, A, Z> flipArgs(BiFunction<A, B, Z> f) {
+		return (b, a) -> f.apply(a, b);
 	}
 
 	public static <A> UnaryOperator<A> toUnaryOperator(Function<A, A> f) {
@@ -47,6 +52,10 @@ public class Curry {
 	}
 
 	/// Optional Specific
+
+	public static <S, Y> Function<S, Optional<Y>> optionalize(Predicate<S> isOver, Function<S, Y> g) {
+		return s -> Optional.of(s).filter(isOver.negate()).map(g);
+	}
 
 	public static <X, Y> Function<Optional<X>, Optional<Y>> optionalMapper(Function<X, Y> mapper) {
 		return opt -> opt.map(mapper);

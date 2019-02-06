@@ -1,6 +1,7 @@
 package com.func;
 
 import static com.func.Curry.curry;
+import static com.func.Curry.flipArgs;
 import static com.func.Curry.uncurry;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,7 +37,17 @@ public class CurryTest {
 	}
 
 	@Test
+	public void testFlipArgs() {
+		// given
+		BiFunction<Integer, Long, String> bif = (i, l) -> i + "." + l;
+		BiFunction<Long, Integer, String> f = flipArgs(bif);
+		// when
+		String act = f.apply(2L, 1);
+		// then
+		assertThat(act).isEqualTo("1.2");
+	}
 
+	@Test
 	public void testOptionalMapperUnitary() {
 		// arrange
 		Function<Integer, Integer> inc = x -> x + 1;
