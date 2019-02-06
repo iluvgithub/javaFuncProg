@@ -1,6 +1,7 @@
 package com.func;
 
 import static com.func.Curry.compose;
+import static java.util.function.Function.identity;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -40,8 +41,10 @@ public class Prod<LEFT, RIGHT> {
 	}
 
 	/**
-	 * @param f: L < -- X
-	 * @param g: R < -- X
+	 * @param f:
+	 *            L < -- X
+	 * @param g:
+	 *            R < -- X
 	 * @return <f,g> LxR <-- X
 	 */
 	public static <X, L, R> Function<X, Prod<L, R>> bracket(Function<X, L> f, Function<X, R> g) {
@@ -49,8 +52,10 @@ public class Prod<LEFT, RIGHT> {
 	}
 
 	/**
-	 * @param f: L2 < -- L1
-	 * @param g: R2 < -- R1
+	 * @param f:
+	 *            L2 < -- L1
+	 * @param g:
+	 *            R2 < -- R1
 	 * @return fxg L2xR2 <-- L1xR1
 	 */
 	public static <L1, L2, R1, R2> Function<Prod<L1, R1>, Prod<L2, R2>> cross(Function<L1, L2> f, Function<R1, R2> g) {
@@ -72,6 +77,10 @@ public class Prod<LEFT, RIGHT> {
 
 	public Prod<RIGHT, LEFT> swap() {
 		return prod(right(), left());
+	}
+
+	public static <L, RX, RY> Function<Prod<L, RX>, Prod<L, RY>> rightMapper(Function<RX, RY> f) {
+		return Prod.<L, L, RX, RY>cross(identity(), f);
 	}
 
 }
