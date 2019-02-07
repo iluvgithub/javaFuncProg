@@ -101,4 +101,9 @@ public class Anamorphism {
 	public static List<Character> stringToList(String s) {
 		return stringToList().apply(s);
 	}
+
+	public static Function<String, List<Character>> reverseStringToList() {
+		return unfold(String::isEmpty,
+				Prod.bracket(s -> s.charAt(s.length() - 1), s -> s.substring(0, s.length() - 1)));
+	}
 }

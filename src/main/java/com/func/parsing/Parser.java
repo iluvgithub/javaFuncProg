@@ -12,6 +12,7 @@ import com.func.list.Anamorphism;
 import com.func.list.Catamorphism;
 import com.func.list.Hylomorphism;
 import com.func.list.List;
+import com.func.list.ListFunction;
 import com.func.vacuum.None;
 
 @FunctionalInterface
@@ -31,6 +32,10 @@ public interface Parser<X> extends Function<List<Character>, List<Prod<X, List<C
 	public static <A, B> Function<List<Prod<A, List<Character>>>, List<List<Prod<B, List<Character>>>>> uncurryAndMap(
 			Function<A, Parser<B>> h) {
 		return Anamorphism.mapper(uncurry(h));
+	}
+
+	public static <T> ListFunction<Prod<T, List<Character>>> toListFunction(Parser<T> p) {
+		return ListFunction.build(Prod.folder((v, cs) -> p.apply(cs)));
 	}
 
 	public static <A, B> Function<Prod<A, List<Character>>, List<Prod<B, List<Character>>>> uncurry(

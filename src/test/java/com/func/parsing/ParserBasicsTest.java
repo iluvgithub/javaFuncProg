@@ -6,9 +6,12 @@ import static com.func.parsing.Parser.ofVoid;
 import static com.func.parsing.ParserBasics.chr;
 import static com.func.parsing.ParserBasics.getc;
 import static com.func.parsing.ParserBasics.sat;
+import static com.func.parsing.ParserBasics.str;
+import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import org.junit.Test;
 
@@ -17,6 +20,7 @@ import com.func.list.List;
 import com.func.vacuum.None;
 
 public class ParserBasicsTest {
+
 	@Test
 	public void testGetc() {
 		// given
@@ -82,4 +86,41 @@ public class ParserBasicsTest {
 		assertThat(actual0.isPresent()).isFalse();
 		assertThat(actual1.isPresent()).isTrue();
 	}
+
+	@Test
+	public void testStr() {
+		// given
+		Parser<None> str = str("abc");
+		// when
+		Optional<None> act = str("aa").parse("aac");
+		Optional<None> actual = str.parse("abcd");
+		Optional<None> actual0 = str.parse("abc");
+		Optional<None> actual1 = str.parse("bc");
+		Optional<None> actual2 = str.parse("ab");
+		// then
+		assertThat(act.isPresent()).isTrue();
+		assertThat(actual.isPresent()).isTrue();
+		assertThat(actual0.isPresent()).isTrue();
+		assertThat(actual1.isPresent()).isFalse();
+		assertThat(actual2.isPresent()).isFalse();
+	}
+
+	@Test
+	public void testStrMass() {
+		// given
+		int n = 9000 ;
+		String s = IntStream.range(0, n).mapToObj(i -> "a").collect(joining(""));
+		Parser<None> str = str(s);
+		// when
+		Optional<None> actual = str.parse(s + "b");
+		Optional<None> actual0 = str.parse(s);
+		Optional<None> actual1 = str.parse("b");
+		Optional<None> actual2 = str.parse("b" + s);
+		// then
+		assertThat(actual.isPresent()).isTrue();
+		assertThat(actual0.isPresent()).isTrue();
+		assertThat(actual1.isPresent()).isFalse();
+		assertThat(actual2.isPresent()).isFalse();
+	}
+
 }
