@@ -3,6 +3,7 @@ package com.func.list;
 import java.util.function.Function;
 
 public class ListFunction<X> implements Function<X, List<X>> {
+	
 	private final List<Function<X, List<X>>> functions;
 
 	private ListFunction(List<Function<X, List<X>>> functions) {
