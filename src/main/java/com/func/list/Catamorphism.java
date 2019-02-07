@@ -32,4 +32,6 @@ public class Catamorphism {
 	private static <X> Function<List<X>, Integer> length() {
 		return foldl(0, (n, unused) -> n + 1);
 	}
+	
+	
 }

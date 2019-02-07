@@ -109,7 +109,7 @@ public class AnamorphismTest {
 		List<Integer> i1 = Anamorphism.list(new Integer[] { 1, 2 });
 		List<Integer> i2 = Anamorphism.list(new Integer[] { 3, 4, 5 });
 		// act
-		List<Integer> actuals = Anamorphism.concat(i1, i2);
+		List<Integer> actuals = Anamorphism.cat(i1, i2);
 		// assert
 		assertThat(actuals.head().get()).isEqualTo(1);
 		assertThat(actuals.tail().get().head().get()).isEqualTo(2);

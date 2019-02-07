@@ -54,7 +54,7 @@ public class Anamorphism {
 		return () -> supplier.get();
 	}
 
-	public static <A> List<A> concat(List<A> l0, List<A> r0) {
+	public static <A> List<A> cat(List<A> l0, List<A> r0) {
 		return unfold(Anamorphism.<A>concatSeed()).apply(prod(l0, r0));
 	}
 

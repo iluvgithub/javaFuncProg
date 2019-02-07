@@ -1,6 +1,7 @@
 package com.func.list;
 
 import static com.func.Curry.flipArgs;
+import static com.func.list.List.empty;
 
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -152,6 +153,14 @@ public class Hylomorphism {
 	}
 
 	public static <U, V> Function<List<U>, List<V>> flatMapper(Function<U, List<V>> h) {
-		return Anamorphism.mapper(h).andThen(Catamorphism.foldl(List.empty(), Anamorphism::concat));
+		return Anamorphism.mapper(h).andThen(Catamorphism.foldl(List.empty(), Anamorphism::cat));
+	}
+
+	public static <X> List<X> concat(List<List<X>> lss) {
+		return Hylomorphism.<X>concat().apply(lss);
+	}
+
+	public static <X> Function<List<List<X>>, List<X>> concat() {
+		return Catamorphism.<List<X>, List<X>>foldl(empty(), Anamorphism::cat);
 	}
 }

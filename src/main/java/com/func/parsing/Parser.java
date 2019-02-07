@@ -5,12 +5,12 @@ import static com.func.list.Anamorphism.stringToList;
 import static com.func.list.List.empty;
 
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import com.func.Prod;
 import com.func.list.Anamorphism;
 import com.func.list.Catamorphism;
+import com.func.list.Hylomorphism;
 import com.func.list.List;
 import com.func.vacuum.None;
 
@@ -22,21 +22,20 @@ public interface Parser<X> extends Function<List<Character>, List<Prod<X, List<C
 	}
 
 	default <Y> Parser<Y> flatMap(Function<X, Parser<Y>> h) {
-		return cs -> {
-			Function<List<Prod<X, List<Character>>>, List<List<Prod<Y, List<Character>>>>>//
-			mm = Anamorphism.mapper(uncurry(h));
-			BiFunction<List<Prod<Y, List<Character>>>, List<Prod<Y, List<Character>>>, List<Prod<Y, List<Character>>>> bif = Anamorphism::concat;
-			Function<List<List<Prod<Y, List<Character>>>>, List<Prod<Y, List<Character>>>> cc = //
-					Catamorphism.foldl(empty(), bif);
-			List<Prod<X, List<Character>>> y = apply(cs);
-			List<List<Prod<Y, List<Character>>>> z = mm.apply(y);
-			return cc.apply(z);
-		};
+		return cs -> this.//
+				andThen(uncurryAndMap(h)).//
+				andThen(Hylomorphism.<Prod<Y, List<Character>>>concat()).//
+				apply(cs);
+	}
+
+	public static <A, B> Function<List<Prod<A, List<Character>>>, List<List<Prod<B, List<Character>>>>> uncurryAndMap(
+			Function<A, Parser<B>> h) {
+		return Anamorphism.mapper(uncurry(h));
 	}
 
 	public static <A, B> Function<Prod<A, List<Character>>, List<Prod<B, List<Character>>>> uncurry(
 			Function<A, Parser<B>> h) {
-		return Prod.folder(  (a,cs) -> h.apply(a).apply(cs)  );
+		return Prod.folder((a, cs) -> h.apply(a).apply(cs));
 	}
 
 	public static Parser<None> ofVoid() {
