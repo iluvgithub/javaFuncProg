@@ -76,4 +76,20 @@ public interface Parser<X> extends Function<List<Character>, List<Prod<X, List<C
 				orElse(right.apply(s));//
 	}
 
+	default Parser<List<X>> some() {
+		return this.flatMap(x -> this.many().flatMap(xs -> of(List.cons(x, xs))));
+	}
+
+	default Parser<List<X>> many() {
+		return orElseEmpty(some());
+	}
+
+	public static <X> Parser<List<X>> orElseEmpty(Parser<List<X>> ps) {
+		return ps.or(emptyListParser());
+	}
+
+	public static <X> Parser<List<X>> emptyListParser() {
+		return of(List.empty());
+
+	}
 }

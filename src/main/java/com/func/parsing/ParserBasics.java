@@ -4,6 +4,7 @@ import static com.func.Prod.prod;
 import static com.func.list.Anamorphism.reverseStringToList;
 import static com.func.list.List.empty;
 import static com.func.parsing.Parser.guard;
+import static com.func.parsing.Parser.of;
 import static com.func.parsing.Parser.ofVoid;
 
 import java.util.function.BiFunction;
@@ -51,6 +52,36 @@ public class ParserBasics {
 
 	private static BiFunction<ListFunction<Prod<None, List<Character>>>, Character, ListFunction<Prod<None, List<Character>>>> strSeed() {
 		return (l, c) -> l.flatten(ncs -> chr(c).apply(ncs.right()));
+	}
+
+	public static Parser<Integer> digit() {
+
+		return sat(isDigit()).flatMap(d -> of(d - '0'));
+
+	}
+
+	private static Predicate<Character> isDigit() {
+		return c -> '0' <= c && c <= '9';
+	}
+
+	public static Parser<Integer> digits() {
+		return digit().some().flatMap(ds -> of(shifter(ds)));
+	}
+
+	private static Integer shifter(List<Integer> ds) {
+		return Catamorphism.foldl(0, ParserBasics::shiftl).apply(ds);
+	}
+
+	private static Integer shiftl(Integer m, Integer n) {
+		return 10 * m + n;
+	}
+
+	public static Parser<Integer> addition() {
+		return digits().flatMap(m -> chr('+').//
+				flatMap(v -> addition().//
+						flatMap(n -> of(m + n)))
+				.or(of(m))
+		);
 	}
 
 }

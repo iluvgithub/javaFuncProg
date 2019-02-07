@@ -1,9 +1,13 @@
 package com.func.parsing;
 
+import static com.func.list.Catamorphism.length;
+import static com.func.list.Catamorphism.trace;
 import static com.func.parsing.Parser.fail;
 import static com.func.parsing.Parser.guard;
 import static com.func.parsing.Parser.ofVoid;
 import static com.func.parsing.ParserBasics.chr;
+import static com.func.parsing.ParserBasics.digit;
+import static com.func.parsing.ParserBasics.digits;
 import static com.func.parsing.ParserBasics.getc;
 import static com.func.parsing.ParserBasics.sat;
 import static com.func.parsing.ParserBasics.str;
@@ -20,7 +24,6 @@ import com.func.list.List;
 import com.func.vacuum.None;
 
 public class ParserBasicsTest {
-
 	@Test
 	public void testGetc() {
 		// given
@@ -123,4 +126,69 @@ public class ParserBasicsTest {
 		assertThat(actual2.isPresent()).isFalse();
 	}
 
+	@Test
+
+    public void testDigit() {
+          // arrange
+          Parser<Integer> digit = digit();
+          // act
+          Optional<Integer> actual = digit.parse("x");
+          Optional<Integer> actual0 = digit.parse("");
+          Optional<Integer> actual1 = digit.parse("1");
+          Optional<Integer> actual5 = digit.parse("5");
+          // assert
+          assertThat(actual.isPresent()).isFalse();
+          assertThat(actual0.isPresent()).isFalse();
+          assertThat(actual1.get()).isEqualTo(1);
+          assertThat(actual5.get()).isEqualTo(5);
+    }
+
+
+
+    @Test
+    public void testSomeAndMany() {
+          // arrange
+          Parser<Integer> digit = digit();
+          Parser<List<Integer>> digits = digit.many();
+          // act
+          Optional<List<Integer>> actual2 = digits.parse("2");
+          Optional<List<Integer>> actual1 = digits.parse("23");
+          Optional<List<Integer>> actual5 = digits.parse("054321");
+          // assert
+          assertThat(trace(actual2.get())).isEqualTo("2");
+          assertThat(trace(actual1.get())).isEqualTo("2.3");
+          assertThat(trace(actual5.get())).isEqualTo("0.5.4.3.2.1");
+    }
+
+    @Test
+    public void testSomeAndManyMass() {
+          // arrange
+          Parser<None> chr = chr('a');
+          Parser<List<None>> digits = chr.many();
+          int n = 300;
+          String s = IntStream.range(0, n).mapToObj(i -> "a").reduce((a, b) -> a + b).get();
+          // act
+          Optional<List<None>> actuals = digits.parse(s);
+          Optional<List<None>> actual0 = digits.parse(s+"a");
+          // assert
+          assertThat(length(actuals.get())).isEqualTo(n);
+          assertThat(length(actual0.get())).isEqualTo(n+1);
+    }
+
+
+    @Test
+    public void testDigits() {
+          // arrange
+          Parser<Integer> digits = digits();
+          // act
+          Optional<Integer> actual2 = digits.parse("2");
+          Optional<Integer> actual1 = digits.parse("23");
+          Optional<Integer> actual5 = digits.parse("054321");
+          Optional<Integer> actual = digits.parse("2x1");
+          // assert
+          assertThat(actual2.get()).isEqualTo(2);
+          assertThat(actual1.get()).isEqualTo(23);
+          assertThat(actual5.get()).isEqualTo(54321);
+          assertThat(actual.get()).isEqualTo(2);
+    }
 }
