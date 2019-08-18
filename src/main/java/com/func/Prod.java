@@ -75,6 +75,10 @@ public class Prod<LEFT, RIGHT> {
 		return f.apply(left(), right());
 	}
 
+	public static <L, R, Z> BiFunction<L, R, Z> applier(Function<Prod<L, R>, Z> f) {
+		return (l, r) -> f.apply(prod(l, r));
+	}
+
 	public Prod<RIGHT, LEFT> swap() {
 		return prod(right(), left());
 	}
