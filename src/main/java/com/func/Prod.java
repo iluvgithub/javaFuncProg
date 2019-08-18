@@ -79,6 +79,10 @@ public class Prod<LEFT, RIGHT> {
 		return prod(right(), left());
 	}
 
+	public static <L, R> Function<Prod<L, R>, Prod<R, L>> swapper() {
+		return prd -> prd.swap();
+	}
+
 	public static <LX, LY, R> Function<Prod<LX, R>, Prod<LY, R>> leftMapper(Function<LX, LY> f) {
 		return Prod.<LX, LY, R, R>cross(f, identity());
 	}
