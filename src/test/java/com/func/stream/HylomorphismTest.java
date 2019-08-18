@@ -20,12 +20,30 @@ public class HylomorphismTest {
 		Function<Integer, Long> f = Hylomorphism.hylo(p, //
 				g, //
 				out, //
-				 (u, v) -> u * v //
+				(u, v) -> u * v //
 		);
 		// when
 		Long actual = f.apply(5);
 		// then
 		assertThat(actual).isEqualTo(120L);
+	}
+
+	@Test
+	public void testSum() {
+		// given
+		Predicate<Integer> p = i -> 0 == i;
+		Long out = 0L;
+		Function<Integer, Prod<Long, Integer>> g = i -> Prod.prod(0L + i, i - 1);
+		Function<Integer, Long> f = Hylomorphism.hylo(p, //
+				g, //
+				out, //
+				(u, v) -> u + v //
+		);
+		Integer input = 30000;
+		// when
+		Long actual = f.apply(input);
+		// then
+		assertThat(actual).isEqualTo(input * (input + 1) / 2L);
 	}
 
 }
