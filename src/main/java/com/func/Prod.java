@@ -79,12 +79,12 @@ public class Prod<LEFT, RIGHT> {
 		return prod(right(), left());
 	}
 
-	public static <L, RX, RY> Function<Prod<L, RX>, Prod<L, RY>> rightMapper(Function<RX, RY> f) {
-		return Prod.<L, L, RX, RY>cross(identity(), f);
-	}
-
 	public static <LX, LY, R> Function<Prod<LX, R>, Prod<LY, R>> leftMapper(Function<LX, LY> f) {
 		return Prod.<LX, LY, R, R>cross(f, identity());
+	}
+
+	public static <L, RX, RY> Function<Prod<L, RX>, Prod<L, RY>> rightMapper(Function<RX, RY> f) {
+		return Prod.<L, L, RX, RY>cross(identity(), f);
 	}
 
 }

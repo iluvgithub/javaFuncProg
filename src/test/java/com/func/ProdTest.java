@@ -34,4 +34,21 @@ public class ProdTest {
 		assertThat(actual.left()).isEqualTo(2);
 		assertThat(actual.right()).isEqualTo(1.5);
 	}
+
+	@Test
+	public void testLeftMapperAndRightMapper() {
+		// given
+		Function<Integer, Long> f = i -> i + 1L;
+		Prod<Integer, Double> input0 = prod(1, 3.14);
+		Prod<Double, Integer> input1 = prod(3.14, 1);
+		// when
+		Prod<Long, Double> actual0 = Prod.<Integer, Long, Double>leftMapper(f).apply(input0);
+		Prod<Double, Long> actual1 = Prod.<Double, Integer, Long>rightMapper(f).apply(input1);
+		// then
+		assertThat(actual0.left()).isEqualTo(2L);
+		assertThat(actual0.right()).isEqualTo(3.14);
+
+		assertThat(actual1.left()).isEqualTo(3.14);
+		assertThat(actual1.right()).isEqualTo(2L);
+	}
 }
