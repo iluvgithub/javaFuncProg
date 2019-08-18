@@ -29,7 +29,7 @@ public class Hylomorphism {
 			Function<I, Optional<Prod<A, I>>> g, //
 			O out, //
 			BiFunction<A, O, O> f) {
-		return i -> bouncer(g, f).apply(i, out).eval();
+		return partialLeft(bouncer(g, f), out).andThen(Bouncer::eval);
 	}
 
 	private static <I, A, O> BiFunction<I, O, Bouncer<O>> bouncer(//
