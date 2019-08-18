@@ -83,4 +83,8 @@ public class Prod<LEFT, RIGHT> {
 		return Prod.<L, L, RX, RY>cross(identity(), f);
 	}
 
+	public static <LX, LY, R> Function<Prod<LX, R>, Prod<LY, R>> leftMapper(Function<LX, LY> f) {
+		return Prod.<LX, LY, R, R>cross(f, identity());
+	}
+
 }
